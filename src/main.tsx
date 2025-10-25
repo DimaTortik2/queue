@@ -6,9 +6,11 @@ import { MainPage } from './pages/main/main-page';
 import { ROUTES } from './app/routes/routes';
 
 createRoot(document.getElementById('root')!).render(
+	<StrictMode>
 		<BrowserRouter>
 			<Routes>
 				<Route path={ROUTES.mainPage} element={<MainPage />} />
 			</Routes>
 		</BrowserRouter>
+	</StrictMode>
 );

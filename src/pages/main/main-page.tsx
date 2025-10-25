@@ -1,7 +1,7 @@
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 const avatarSize: number = 500;
-const userCount = 20;
+const userCount = 30;
 
 interface IData {
 	avaSrc: string;
@@ -65,7 +65,7 @@ export function MainPage() {
 
 			<TransformWrapper
 				limitToBounds={false}
-				minScale={0.05}
+				minScale={0.015}
 				maxScale={2}
 				initialPositionX={0}
 				initialPositionY={0}
