@@ -17,7 +17,7 @@ export function MainPage() {
 				maxScale={2}
 				initialPositionX={0}
 				initialPositionY={0}
-				initialScale={1}
+				initialScale={0.25}
 				doubleClick={{ disabled: true }}
 				wheel={{ step: 1 }}
 				panning={{ excluded: ['excluded-item'] }}

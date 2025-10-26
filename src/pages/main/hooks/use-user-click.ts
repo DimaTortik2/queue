@@ -4,7 +4,6 @@ import type { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 import { avatarSize } from '../consts';
 
 export function useUserClick(userData: IUserData) {
-
 	const canvasRef = useRef<ReactZoomPanPinchContentRef>(null);
 
 	const [transformState, setTransformState] = useState<ITransformState>({
@@ -24,8 +23,9 @@ export function useUserClick(userData: IUserData) {
 	}, [transformState]);
 
 	const handleUserClick = (i: number) => {
+		const isMobile = window.innerWidth < 660;
 		const isLeft = i % 2 === 0;
-		const scale = 2;
+		const scale = isMobile ? 0.25 : 0.5;
 
 		const shiftToLeftX = isLeft
 			? scale * userData[0].left - window.innerWidth * 0.02
