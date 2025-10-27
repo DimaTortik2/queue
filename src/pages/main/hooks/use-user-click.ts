@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import type { ITransformState, IUserData } from '../interfaces';
+import type { IData, ITransformState, IUserData } from '../interfaces';
 import type { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 import { avatarSize } from '../consts';
 
-export function useUserClick(userData: IUserData) {
+export function useUserClick(
+	userData: IUserData,
+	shiftOtherUsers: (idAndIndex: {
+		selectedUserId: IData['id'];
+		selectedUserIndex: number;
+	}) => void
+) {
 	const canvasRef = useRef<ReactZoomPanPinchContentRef>(null);
 
 	const [transformState, setTransformState] = useState<ITransformState>({
@@ -22,9 +28,16 @@ export function useUserClick(userData: IUserData) {
 		);
 	}, [transformState]);
 
-	const handleUserClick = (i: number) => {
+	const handleUserClick = ({
+		selectedUserId,
+		selectedUserIndex,
+	}: {
+		selectedUserId: IData['id'];
+		selectedUserIndex: number;
+	}) => {
+		// zoom to User
 		const isMobile = window.innerWidth < 660;
-		const isLeft = i % 2 === 0;
+		const isLeft = selectedUserIndex % 2 === 0;
 		const scale = isMobile ? 0.25 : 0.5;
 
 		const shiftToLeftX = isLeft
@@ -35,7 +48,7 @@ export function useUserClick(userData: IUserData) {
 			  avatarSize * scale;
 
 		const shiftToCenterY =
-			scale * userData[i].top -
+			scale * userData[selectedUserIndex].top -
 			(window.innerHeight / 2 - (avatarSize / 2) * scale);
 
 		const x = -shiftToLeftX;
@@ -47,6 +60,9 @@ export function useUserClick(userData: IUserData) {
 			y,
 			scale,
 		});
+
+		// shift others
+		shiftOtherUsers({ selectedUserId, selectedUserIndex });
 	};
 
 	return { handleUserClick, canvasRef };

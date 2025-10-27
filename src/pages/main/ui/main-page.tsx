@@ -3,10 +3,21 @@ import { Layout } from './layout';
 import { useBuisness } from '../hooks/use-buisness';
 import { useUserClick } from '../hooks/use-user-click';
 import { Avatar } from './avatar';
+import { Line } from './line';
 
 export function MainPage() {
-	const { canvaHeight, canvaWidth, userData, lineData } = useBuisness();
-	const { canvasRef, handleUserClick } = useUserClick(userData);
+	const {
+		canvaHeight,
+		canvaWidth,
+		userData,
+		lineData,
+		shiftOtherUsers,
+		initialLineData,
+	} = useBuisness();
+	const { canvasRef, handleUserClick } = useUserClick(
+		userData,
+		shiftOtherUsers
+	);
 
 	return (
 		<Layout>
@@ -31,31 +42,43 @@ export function MainPage() {
 						className='w-full h-full'
 						xmlns='http://www.w3.org/2000/svg'
 					>
-						{lineData.map(data => {
+						{lineData.map((line, i) => {
 							return (
-								<line
-									x1={data.x1}
-									y1={data.y1}
-									x2={data.x2}
-									y2={data.y2}
+								<Line
+									initX1={initialLineData[i].x1}
+									initY1={initialLineData[i].y1}
+									initX2={initialLineData[i].x2}
+									initY2={initialLineData[i].y2}
+									x1={line.x1}
+									y1={line.y1}
+									x2={line.x2}
+									y2={line.y2}
 									stroke='black'
 									strokeWidth={10}
-									key={data.id}
+									key={line.id}
+									className={String(line.id)}
 								/>
 							);
 						})}
 					</svg>
-					{userData.map((data, i) => {
+					{userData.map((user, i) => {
 						return (
 							<Avatar
 								style={{
-									left: data.left,
-									top: data.top,
+									left: user.left,
+									top: user.top,
+									transform: `translateY(${user.translateY}px)`,
 								}}
-								onClick={() => handleUserClick(i)}
-								key={data.id}
-								src={data.avaSrc}
+								onClick={() =>
+									handleUserClick({
+										selectedUserId: user.id,
+										selectedUserIndex: i,
+									})
+								}
+								key={user.id}
+								src={user.avaSrc}
 								alt='avatar'
+								className='excluded-item transition-transform duration-1000'
 							/>
 						);
 					})}

@@ -1,6 +1,9 @@
+import clsx from "clsx";
+
 export const Avatar = ({
 	src,
 	alt,
+	className,
 	...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	src: string | undefined;
@@ -8,7 +11,10 @@ export const Avatar = ({
 }) => {
 	return (
 		<button
-			className='absolute left-[1600px] top-[700px] excluded-item'
+			className={clsx(
+				'absolute left-[1600px] top-[700px]',
+				className
+			)}
 			{...props}
 		>
 			<img

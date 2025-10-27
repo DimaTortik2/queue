@@ -6,6 +6,8 @@ export interface IData {
 export type IUserData = {
 	left: number;
 	top: number;
+	translateX: number;
+	translateY: number;
 	avaSrc: string;
 	id: number;
 }[];
