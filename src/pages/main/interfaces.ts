@@ -1,24 +1,24 @@
-export interface IData {
+export interface IUserDataElement {
 	avaSrc: string;
 	id: number;
 }
 
-export type IUserData = {
+export type IUser = {
 	left: number;
 	top: number;
 	translateX: number;
 	translateY: number;
 	avaSrc: string;
 	id: number;
-}[];
+} & IUserDataElement;
 
-export type ILineData = {
+export type ILine = {
 	x1: number;
 	y1: number;
 	x2: number;
 	y2: number;
 	id: number;
-}[];
+};
 
 export interface ITransformState {
 	scale: number;

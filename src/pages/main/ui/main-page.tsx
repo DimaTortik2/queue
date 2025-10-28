@@ -9,26 +9,32 @@ export function MainPage() {
 	const {
 		canvaHeight,
 		canvaWidth,
-		userData,
-		lineData,
+		users,
+		initialLines,
+		lines,
 		shiftOtherUsers,
-		initialLineData,
+		resetUserData,
+		initailWrapperX,
+		initionalTransformState,
 	} = useBuisness();
-	const { canvasRef, handleUserClick } = useUserClick(
-		userData,
-		shiftOtherUsers
-	);
+	const { canvasRef, handleUserClick, resetUserClick } = useUserClick({
+		users,
+		shiftOtherUsers,
+		resetUserData,
+		initailWrapperX,
+		initionalTransformState,
+	});
 
 	return (
 		<Layout>
 			<TransformWrapper
 				ref={canvasRef}
 				limitToBounds={false}
-				minScale={0.015}
-				maxScale={2}
-				initialPositionX={0}
-				initialPositionY={0}
-				initialScale={0.25}
+				minScale={0.04}
+				maxScale={1.5}
+				initialPositionX={initionalTransformState.x}
+				initialPositionY={initionalTransformState.y}
+				initialScale={initionalTransformState.scale}
 				doubleClick={{ disabled: true }}
 				wheel={{ step: 1 }}
 				panning={{ excluded: ['excluded-item'] }}
@@ -36,19 +42,20 @@ export function MainPage() {
 				<TransformComponent
 					contentStyle={{ height: canvaHeight, width: canvaWidth }}
 					contentClass='bg-[#ffffff] relative'
+					contentProps={{ onClick: resetUserClick }}
 				>
 					<svg
 						viewBox={`0 0 ${canvaWidth} ${canvaHeight}`}
 						className='w-full h-full'
 						xmlns='http://www.w3.org/2000/svg'
 					>
-						{lineData.map((line, i) => {
+						{lines.map((line, i) => {
 							return (
 								<Line
-									initX1={initialLineData[i].x1}
-									initY1={initialLineData[i].y1}
-									initX2={initialLineData[i].x2}
-									initY2={initialLineData[i].y2}
+									initX1={initialLines[i].x1}
+									initY1={initialLines[i].y1}
+									initX2={initialLines[i].x2}
+									initY2={initialLines[i].y2}
 									x1={line.x1}
 									y1={line.y1}
 									x2={line.x2}
@@ -61,7 +68,7 @@ export function MainPage() {
 							);
 						})}
 					</svg>
-					{userData.map((user, i) => {
+					{users.map((user, i) => {
 						return (
 							<Avatar
 								style={{

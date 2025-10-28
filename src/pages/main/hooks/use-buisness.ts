@@ -1,24 +1,43 @@
 import { useState } from 'react';
-import { avatarSize, userCount } from '../consts';
-import type { IData, ILineData, IUserData } from '../interfaces';
+import { CONSTS } from '../consts';
+import type {
+	ILine,
+	ITransformState,
+	IUser,
+	IUserDataElement,
+} from '../interfaces';
 
 export function useBuisness() {
-	const data: IData[] = [];
-	for (let i = 0; i < userCount; i++) {
-		data.push({
+	const userData: IUserDataElement[] = [];
+	for (let i = 0; i < CONSTS.userCount; i++) {
+		userData.push({
 			avaSrc: '/ava.png',
 			id: i,
 		});
 	}
 
-	const canvaHeight: number = 2000 + data.length * (avatarSize + 50);
+	const canvaHeight: number = 2000 + userData.length * (CONSTS.avatarSize + 50);
 	const canvaWidth: number = 10000;
 
-	const initialUserData: IUserData = data.map((user, i) => {
+	const queueWidth: number =
+		CONSTS.rightInitialAvatarMargin +
+		CONSTS.avatarSize -
+		CONSTS.leftInitialAvatarMargin;
+	const windowLeftPadding: number =
+		(window.innerWidth / CONSTS.initialScale - queueWidth) / 2;
+	const initailWrapperX: number = -(
+		CONSTS.leftInitialAvatarMargin - windowLeftPadding
+	);
+
+	const initailWrapperY: number = 0;
+
+	const initialUsers: IUser[] = userData.map((user, i) => {
 		const isLeft = i % 2 == 0;
 		return {
-			left: isLeft ? 1600 : 2500,
-			top: 700 + 550 * i,
+			left: isLeft
+				? CONSTS.leftInitialAvatarMargin
+				: CONSTS.rightInitialAvatarMargin,
+			top: CONSTS.topInitialAvatarMargin + CONSTS.initialdiffBetweenAvatars * i,
 			translateX: 0,
 			translateY: 0,
 			avaSrc: user.avaSrc,
@@ -26,15 +45,15 @@ export function useBuisness() {
 		};
 	});
 
-	const [userData, setUserData] = useState<IUserData>(initialUserData);
+	const [users, setUsers] = useState<IUser[]>(initialUsers);
 
-	const initialLineData: ILineData = [];
-	for (let i = 0; i < initialUserData.length - 1; i++) {
-		const firstUserCoords = initialUserData[i];
-		const secondUserCoords = initialUserData[i + 1];
-		const halfAvatarSize = avatarSize / 2;
+	const initialLines: ILine[] = [];
+	for (let i = 0; i < initialUsers.length - 1; i++) {
+		const firstUserCoords = initialUsers[i];
+		const secondUserCoords = initialUsers[i + 1];
+		const halfAvatarSize = CONSTS.avatarSize / 2;
 
-		initialLineData.push({
+		initialLines.push({
 			x1: firstUserCoords.left + halfAvatarSize,
 			y1: firstUserCoords.top + halfAvatarSize,
 			x2: secondUserCoords.left + halfAvatarSize,
@@ -43,13 +62,13 @@ export function useBuisness() {
 		});
 	}
 
-	const lineData: ILineData = [];
-	for (let i = 0; i < userData.length - 1; i++) {
-		const firstUserCoords = userData[i];
-		const secondUserCoords = userData[i + 1];
-		const halfAvatarSize = avatarSize / 2;
+	const lines: ILine[] = [];
+	for (let i = 0; i < users.length - 1; i++) {
+		const firstUserCoords = users[i];
+		const secondUserCoords = users[i + 1];
+		const halfAvatarSize = CONSTS.avatarSize / 2;
 
-		lineData.push({
+		lines.push({
 			x1: firstUserCoords.left + firstUserCoords.translateX + halfAvatarSize,
 			y1: firstUserCoords.top + firstUserCoords.translateY + halfAvatarSize,
 			x2: secondUserCoords.left + secondUserCoords.translateX + halfAvatarSize,
@@ -62,12 +81,12 @@ export function useBuisness() {
 		selectedUserId,
 		selectedUserIndex,
 	}: {
-		selectedUserId: IData['id'];
+		selectedUserId: IUser['id'];
 		selectedUserIndex: number;
 	}) => {
 		const shiftY = window.innerHeight / 2;
 
-		const newUserData = userData.map((user, i) => {
+		const newUsers = users.map((user, i) => {
 			if (selectedUserId !== user.id) {
 				// to above users
 				if (i < selectedUserIndex) {
@@ -81,15 +100,29 @@ export function useBuisness() {
 			return user;
 		});
 
-		setUserData(newUserData);
+		setUsers(newUsers);
+	};
+
+	const resetUserData = () => {
+		setUsers(initialUsers);
+	};
+
+	const initionalTransformState: ITransformState = {
+		scale: CONSTS.initialScale,
+		x: initailWrapperX * CONSTS.initialScale,
+		y: initailWrapperY * CONSTS.initialScale,
 	};
 
 	return {
 		canvaHeight,
 		canvaWidth,
-		userData,
-		lineData,
+		users,
+		lines,
 		shiftOtherUsers,
-		initialLineData,
+		initialLines,
+		resetUserData,
+		initailWrapperX,
+		initailWrapperY,
+		initionalTransformState,
 	};
 }

@@ -34,7 +34,7 @@ export function Line({
 			variants={variants}
 			initial='start'
 			animate='end'
-			transition={{ duration: 1 }}
+			transition={{ duration: 0.85 }}
 			{...props}
 		/>
 	);
