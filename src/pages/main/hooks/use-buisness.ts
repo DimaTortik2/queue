@@ -6,6 +6,7 @@ import type {
 	IUser,
 	IUserDataElement,
 } from '../interfaces';
+import { useSpring } from '@react-spring/konva';
 
 export function useBuisness() {
 	const userData: IUserDataElement[] = [];
@@ -20,13 +21,11 @@ export function useBuisness() {
 	const canvaWidth: number = 10000;
 
 	const queueWidth: number =
-		CONSTS.rightInitialAvatarMargin +
-		CONSTS.avatarSize -
-		CONSTS.leftInitialAvatarMargin;
+		CONSTS.rightInitialAvatarX - CONSTS.leftInitialAvatarX;
 	const windowLeftPadding: number =
 		(window.innerWidth / CONSTS.initialScale - queueWidth) / 2;
 	const initailWrapperX: number = -(
-		CONSTS.leftInitialAvatarMargin - windowLeftPadding
+		CONSTS.leftInitialAvatarX - windowLeftPadding
 	);
 
 	const initailWrapperY: number = 0;
@@ -34,12 +33,8 @@ export function useBuisness() {
 	const initialUsers: IUser[] = userData.map((user, i) => {
 		const isLeft = i % 2 == 0;
 		return {
-			left: isLeft
-				? CONSTS.leftInitialAvatarMargin
-				: CONSTS.rightInitialAvatarMargin,
-			top: CONSTS.topInitialAvatarMargin + CONSTS.initialdiffBetweenAvatars * i,
-			translateX: 0,
-			translateY: 0,
+			x: isLeft ? CONSTS.leftInitialAvatarX : CONSTS.rightInitialAvatarX,
+			y: CONSTS.initialAvatarY + CONSTS.initialdiffBetweenAvatars * i,
 			avaSrc: user.avaSrc,
 			id: user.id,
 		};
@@ -51,13 +46,12 @@ export function useBuisness() {
 	for (let i = 0; i < initialUsers.length - 1; i++) {
 		const firstUserCoords = initialUsers[i];
 		const secondUserCoords = initialUsers[i + 1];
-		const halfAvatarSize = CONSTS.avatarSize / 2;
 
 		initialLines.push({
-			x1: firstUserCoords.left + halfAvatarSize,
-			y1: firstUserCoords.top + halfAvatarSize,
-			x2: secondUserCoords.left + halfAvatarSize,
-			y2: secondUserCoords.top + halfAvatarSize,
+			x1: firstUserCoords.x,
+			y1: firstUserCoords.y,
+			x2: secondUserCoords.x,
+			y2: secondUserCoords.y,
 			id: firstUserCoords.id,
 		});
 	}
@@ -66,13 +60,12 @@ export function useBuisness() {
 	for (let i = 0; i < users.length - 1; i++) {
 		const firstUserCoords = users[i];
 		const secondUserCoords = users[i + 1];
-		const halfAvatarSize = CONSTS.avatarSize / 2;
 
 		lines.push({
-			x1: firstUserCoords.left + firstUserCoords.translateX + halfAvatarSize,
-			y1: firstUserCoords.top + firstUserCoords.translateY + halfAvatarSize,
-			x2: secondUserCoords.left + secondUserCoords.translateX + halfAvatarSize,
-			y2: secondUserCoords.top + secondUserCoords.translateY + halfAvatarSize,
+			x1: firstUserCoords.x,
+			y1: firstUserCoords.y,
+			x2: secondUserCoords.x,
+			y2: secondUserCoords.y,
 			id: firstUserCoords.id,
 		});
 	}
@@ -84,17 +77,18 @@ export function useBuisness() {
 		selectedUserId: IUser['id'];
 		selectedUserIndex: number;
 	}) => {
+
 		const shiftY = window.innerHeight / 2;
 
 		const newUsers = users.map((user, i) => {
 			if (selectedUserId !== user.id) {
 				// to above users
 				if (i < selectedUserIndex) {
-					return { ...user, translateY: user.translateY - shiftY };
+					return { ...user, y: user.y - shiftY };
 				}
 				// to below users
 				else if (i > selectedUserIndex) {
-					return { ...user, translateY: user.translateY + shiftY };
+					return { ...user, y: user.y + shiftY };
 				}
 			}
 			return user;
@@ -112,6 +106,7 @@ export function useBuisness() {
 		x: initailWrapperX * CONSTS.initialScale,
 		y: initailWrapperY * CONSTS.initialScale,
 	};
+
 
 	return {
 		canvaHeight,

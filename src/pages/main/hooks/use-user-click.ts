@@ -50,10 +50,11 @@ export function useUserClick({
 				x: initailWrapperX * CONSTS.initialScale,
 				y: getTransformStateYToCenterSelectedUser(
 					CONSTS.initialScale,
-					selectedUser.top
+					selectedUser.y
 				),
 				scale: CONSTS.initialScale,
 			});
+
 			resetUserData();
 
 			setSelectedUser(null);
@@ -70,42 +71,44 @@ export function useUserClick({
 		// reset if toggled
 		resetUserClick();
 
-		const selectedUser = users[selectedUserIndex];
+		if (selectedUser === null) {
+			const selectedUser = users[selectedUserIndex];
 
-		// set current user
-		setSelectedUser(selectedUser);
+			// set current user
+			setSelectedUser(selectedUser);
 
-		// zoom to User
-		const isMobile = window.innerWidth < 660;
-		const isLeft = selectedUserIndex % 2 === 0;
-		const scale = isMobile
-			? CONSTS.initialScale * 0.9
-			: CONSTS.initialScale * 2;
+			// zoom to User
+			const isMobile = window.innerWidth < 660;
+			const isLeft = selectedUserIndex % 2 === 0;
+			const scale = isMobile
+				? CONSTS.initialScale * 0.9
+				: CONSTS.initialScale * 2;
 
-		const shiftToLeftX = isLeft
-			? scale * users[0].left - window.innerWidth * 0.02
-			: scale * users[1].left +
-			  window.innerWidth * 0.02 -
-			  window.innerWidth +
-			  CONSTS.avatarSize * scale;
+			const shiftToLeftX = isLeft
+				? scale * users[0].x - window.innerWidth * 0.02
+				: scale * users[1].x +
+				  window.innerWidth * 0.02 -
+				  window.innerWidth +
+				  CONSTS.avatarSize * scale;
 
-		const shiftToCenterY = getTransformStateYToCenterSelectedUser(
-			scale,
-			selectedUser.top
-		);
+			const shiftToCenterY = getTransformStateYToCenterSelectedUser(
+				scale,
+				selectedUser.y
+			);
 
-		const x = -shiftToLeftX;
+			const x = -shiftToLeftX;
 
-		const y = shiftToCenterY;
+			const y = shiftToCenterY;
 
-		setTransformState({
-			x,
-			y,
-			scale,
-		});
+			setTransformState({
+				x,
+				y,
+				scale,
+			});
 
-		// shift others
-		shiftOtherUsers({ selectedUserId, selectedUserIndex });
+			// shift others
+			shiftOtherUsers({ selectedUserId, selectedUserIndex });
+		}
 	};
 
 	return { handleUserClick, canvasRef, resetUserClick };

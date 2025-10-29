@@ -4,10 +4,8 @@ export interface IUserDataElement {
 }
 
 export type IUser = {
-	left: number;
-	top: number;
-	translateX: number;
-	translateY: number;
+	x: number;
+	y: number;
 	avaSrc: string;
 	id: number;
 } & IUserDataElement;
