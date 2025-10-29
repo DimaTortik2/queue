@@ -37,7 +37,8 @@ export function MainPage() {
 				initialScale={initionalTransformState.scale}
 				doubleClick={{ disabled: true }}
 				wheel={{ step: 1 }}
-				panning={{ excluded: ['excluded-item'] }}
+				smooth
+			
 			>
 				<TransformComponent
 					contentStyle={{ height: canvaHeight, width: canvaWidth }}
@@ -85,7 +86,7 @@ export function MainPage() {
 								key={user.id}
 								src={user.avaSrc}
 								alt='avatar'
-								className='excluded-item transition-transform duration-1000'
+								className='transition-transform duration-1000'
 							/>
 						);
 					})}
