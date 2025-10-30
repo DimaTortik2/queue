@@ -4,11 +4,9 @@ import { useBuisness } from '../hooks/use-buisness';
 import { useUserClick } from '../hooks/use-user-click';
 import { Avatar } from './avatar';
 import { Line } from './line';
-import { Circle, Layer, Stage } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
 import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
 import { useAnimations } from '../hooks/use-animations';
-import { useAtomValue } from 'jotai';
-import { selectedUserAtom } from '../../../app/strore/atoms';
 
 // export function MainPage() {
 // 	const {
@@ -111,33 +109,34 @@ export function MainPage() {
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
-		initionalTransformState,
+		initionalStage,
+		setStage,
+		stageRef,
 	} = useBuisness();
-	const { canvasRef, handleUserClick, resetUserClick } = useUserClick({
+	const { handleUserClick, resetUserClick } = useUserClick({
 		users,
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
-		initionalTransformState,
+		setStage,
 	});
 
-	const { springs, AnimatedCircle, AnimatedStage } = useAnimations(users);
-
-	const su = useAtomValue(selectedUserAtom);
-
-	console.log(su);
+	const { userSprings, AnimatedCircle } = useAnimations({
+		users,
+	});
 
 	return (
 		<Layout>
-			<AnimatedStage
+			<Stage
+				ref={stageRef}
 				width={window.innerWidth}
 				height={window.innerHeight}
-				x={initionalTransformState.x}
-				y={initionalTransformState.y}
-				scaleX={initionalTransformState.scale}
-				scaleY={initionalTransformState.scale}
+				x={initionalStage.x}
+				y={initionalStage.y}
+				scaleX={initionalStage.scale}
+				scaleY={initionalStage.scale}
 				draggable
-				onPointerDown={(
+				onPointerClick={(
 					e: KonvaEventObject<PointerEvent, Node<NodeConfig>>
 				) => {
 					if (e.target === e.currentTarget) {
@@ -154,11 +153,10 @@ export function MainPage() {
 				// smooth
 			>
 				<Layer>
-					<Circle></Circle>
-					{springs.map((springProps, i) => (
+					{userSprings.map(({ x, y }, i) => (
 						<AnimatedCircle
-							x={springProps.x}
-							y={springProps.y}
+							x={x}
+							y={y}
 							radius={250}
 							fill={'#550000'}
 							onPointerClick={() => {
@@ -171,7 +169,7 @@ export function MainPage() {
 						/>
 					))}
 				</Layer>
-			</AnimatedStage>
+			</Stage>
 
 			{/* <svg
 						viewBox={`0 0 ${canvaWidth} ${canvaHeight}`}

@@ -18,7 +18,7 @@ export type ILine = {
 	id: number;
 };
 
-export interface ITransformState {
+export interface IStage {
 	scale: number;
 	x: number;
 	y: number;

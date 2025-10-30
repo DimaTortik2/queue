@@ -1,29 +1,24 @@
-import {  animated, config, useSprings } from '@react-spring/konva';
+import { animated, config, useSprings } from '@react-spring/konva';
 import { useEffect } from 'react';
 import type { IUser } from '../interfaces';
-import { Circle, Stage } from 'react-konva';
+import { Circle } from 'react-konva';
 
-export function useAnimations(users: IUser[]) {
+export function useAnimations({ users }: { users: IUser[] }) {
+	// typescript recursion problem
+	const AnimatedCircle = animated(Circle) as any;
 
-
-  // typescript recursion problem
-  const AnimatedStage = animated(Stage) as any;
-  const AnimatedCircle = animated(Circle) as any;
-
-	const [springs, api] = useSprings(users.length, i => ({
+	const [userSprings, usersApi] = useSprings(users.length, i => ({
 		x: users[i].x,
 		y: users[i].y,
-		config: config.stiff,
+		config: config.slow,
 	}));
 
 	useEffect(() => {
-		api.start(i => ({ x: users[i].x, y: users[i].y }));
-	}, [users, api]);
+		usersApi.start(i => ({ x: users[i].x, y: users[i].y }));
+	}, [users, usersApi]);
 
-
-  return {
-		springs,
-		AnimatedStage,
+	return {
+		userSprings,
 		AnimatedCircle,
 	};
 }

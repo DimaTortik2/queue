@@ -1,12 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CONSTS } from '../consts';
-import type {
-	ILine,
-	ITransformState,
-	IUser,
-	IUserDataElement,
-} from '../interfaces';
-import { useSpring } from '@react-spring/konva';
+import type { ILine, IStage, IUser, IUserDataElement } from '../interfaces';
+import type { Stage } from 'konva/lib/Stage';
+import Konva from 'konva';
 
 export function useBuisness() {
 	const userData: IUserDataElement[] = [];
@@ -77,7 +73,6 @@ export function useBuisness() {
 		selectedUserId: IUser['id'];
 		selectedUserIndex: number;
 	}) => {
-
 		const shiftY = window.innerHeight / 2;
 
 		const newUsers = users.map((user, i) => {
@@ -101,12 +96,31 @@ export function useBuisness() {
 		setUsers(initialUsers);
 	};
 
-	const initionalTransformState: ITransformState = {
+	//
+
+	const stageRef = useRef<Stage | null>(null);
+
+	const initionalStage: IStage = {
 		scale: CONSTS.initialScale,
 		x: initailWrapperX * CONSTS.initialScale,
 		y: initailWrapperY * CONSTS.initialScale,
 	};
 
+	const [stage, setStage] = useState<IStage>(initionalStage);
+
+	useEffect(() => {
+		if (!stageRef || !stageRef.current) return;
+
+		new Konva.Tween({
+			node: stageRef.current,
+			duration: 0.35,
+			scaleX: stage.scale,
+			scaleY: stage.scale,
+			x: stage.x,
+			y: stage.y,
+			easing: Konva.Easings.EaseInOut,
+		}).play();
+	}, [stage]);
 
 	return {
 		canvaHeight,
@@ -118,6 +132,8 @@ export function useBuisness() {
 		resetUserData,
 		initailWrapperX,
 		initailWrapperY,
-		initionalTransformState,
+		initionalStage,
+		setStage,
+		stageRef,
 	};
 }

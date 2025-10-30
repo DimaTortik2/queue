@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import type { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 import { useAtom } from 'jotai';
 import { CONSTS } from '../consts';
 import { selectedUserAtom } from '../../../app/strore/atoms';
-import type { ITransformState, IUser } from '../interfaces';
+import type { IStage, IUser } from '../interfaces';
 import { getTransformStateYToCenterSelectedUser } from '../helpers/get-transform-state-y-to-center-selected-user';
 
 interface IProps {
@@ -14,7 +12,7 @@ interface IProps {
 	}) => void;
 	resetUserData: () => void;
 	initailWrapperX: number;
-	initionalTransformState: ITransformState;
+	setStage: React.Dispatch<React.SetStateAction<IStage>>;
 }
 
 export function useUserClick({
@@ -22,31 +20,15 @@ export function useUserClick({
 	shiftOtherUsers,
 	users,
 	initailWrapperX,
-	initionalTransformState,
+	setStage,
 }: IProps) {
 	const [selectedUser, setSelectedUser] = useAtom(selectedUserAtom);
-
-	const canvasRef = useRef<ReactZoomPanPinchContentRef>(null);
-
-	const [transformState, setTransformState] = useState<ITransformState>(
-		initionalTransformState
-	);
-
-	useEffect(() => {
-		if (!canvasRef) return;
-
-		canvasRef.current?.setTransform(
-			transformState.x,
-			transformState.y,
-			transformState.scale
-		);
-	}, [transformState]);
 
 	const resetUserClick = () => {
 		if (selectedUser !== null) {
 			// unzoom
 
-			setTransformState({
+			setStage({
 				x: initailWrapperX * CONSTS.initialScale,
 				y: getTransformStateYToCenterSelectedUser(
 					CONSTS.initialScale,
@@ -85,11 +67,13 @@ export function useUserClick({
 				: CONSTS.initialScale * 2;
 
 			const shiftToLeftX = isLeft
-				? scale * users[0].x - window.innerWidth * 0.02
+				? scale * users[0].x -
+				  window.innerWidth * 0.02 -
+				  (CONSTS.avatarSize / 2) * scale
 				: scale * users[1].x +
 				  window.innerWidth * 0.02 -
 				  window.innerWidth +
-				  CONSTS.avatarSize * scale;
+				  (CONSTS.avatarSize / 2) * scale;
 
 			const shiftToCenterY = getTransformStateYToCenterSelectedUser(
 				scale,
@@ -100,7 +84,7 @@ export function useUserClick({
 
 			const y = shiftToCenterY;
 
-			setTransformState({
+			setStage({
 				x,
 				y,
 				scale,
@@ -111,5 +95,5 @@ export function useUserClick({
 		}
 	};
 
-	return { handleUserClick, canvasRef, resetUserClick };
+	return { handleUserClick, resetUserClick };
 }
