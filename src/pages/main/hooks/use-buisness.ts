@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { CONSTS } from '../consts';
 import type { ILine, IStage, IUser, IUserDataElement } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
-import Konva from 'konva';
 
 export function useBuisness() {
 	const userData: IUserDataElement[] = [];
@@ -26,45 +25,55 @@ export function useBuisness() {
 
 	const initailWrapperY: number = 0;
 
-	const initialUsers: IUser[] = userData.map((user, i) => {
-		const isLeft = i % 2 == 0;
-		return {
-			x: isLeft ? CONSTS.leftInitialAvatarX : CONSTS.rightInitialAvatarX,
-			y: CONSTS.initialAvatarY + CONSTS.initialdiffBetweenAvatars * i,
-			avaSrc: user.avaSrc,
-			id: user.id,
-		};
-	});
+	const initialUsers: IUser[] = useMemo(
+		() =>
+			userData.map((user, i) => {
+				const isLeft = i % 2 == 0;
+				return {
+					x: isLeft ? CONSTS.leftInitialAvatarX : CONSTS.rightInitialAvatarX,
+					y: CONSTS.initialAvatarY + CONSTS.initialdiffBetweenAvatars * i,
+					avaSrc: user.avaSrc,
+					id: user.id,
+				};
+			}),
+		[userData]
+	);
 
 	const [users, setUsers] = useState<IUser[]>(initialUsers);
 
-	const initialLines: ILine[] = [];
-	for (let i = 0; i < initialUsers.length - 1; i++) {
-		const firstUserCoords = initialUsers[i];
-		const secondUserCoords = initialUsers[i + 1];
+	const initialLines: ILine[] = useMemo(() => {
+		const initialLines: ILine[] = [];
+		for (let i = 0; i < initialUsers.length - 1; i++) {
+			const firstUserCoords = initialUsers[i];
+			const secondUserCoords = initialUsers[i + 1];
 
-		initialLines.push({
-			x1: firstUserCoords.x,
-			y1: firstUserCoords.y,
-			x2: secondUserCoords.x,
-			y2: secondUserCoords.y,
-			id: firstUserCoords.id,
-		});
-	}
+			initialLines.push({
+				x1: firstUserCoords.x,
+				y1: firstUserCoords.y,
+				x2: secondUserCoords.x,
+				y2: secondUserCoords.y,
+				id: firstUserCoords.id,
+			});
+		}
+		return initialLines;
+	}, [initialUsers]);
 
-	const lines: ILine[] = [];
-	for (let i = 0; i < users.length - 1; i++) {
-		const firstUserCoords = users[i];
-		const secondUserCoords = users[i + 1];
+	const lines: ILine[] = useMemo(() => {
+		const lines: ILine[] = [];
+		for (let i = 0; i < users.length - 1; i++) {
+			const firstUserCoords = users[i];
+			const secondUserCoords = users[i + 1];
 
-		lines.push({
-			x1: firstUserCoords.x,
-			y1: firstUserCoords.y,
-			x2: secondUserCoords.x,
-			y2: secondUserCoords.y,
-			id: firstUserCoords.id,
-		});
-	}
+			lines.push({
+				x1: firstUserCoords.x,
+				y1: firstUserCoords.y,
+				x2: secondUserCoords.x,
+				y2: secondUserCoords.y,
+				id: firstUserCoords.id,
+			});
+		}
+		return lines;
+	}, [users]);
 
 	const shiftOtherUsers = ({
 		selectedUserId,
@@ -97,9 +106,6 @@ export function useBuisness() {
 	};
 
 	//
-
-	const stageRef = useRef<Stage | null>(null);
-
 	const initionalStage: IStage = {
 		scale: CONSTS.initialScale,
 		x: initailWrapperX * CONSTS.initialScale,
@@ -108,19 +114,7 @@ export function useBuisness() {
 
 	const [stage, setStage] = useState<IStage>(initionalStage);
 
-	useEffect(() => {
-		if (!stageRef || !stageRef.current) return;
-
-		new Konva.Tween({
-			node: stageRef.current,
-			duration: 0.35,
-			scaleX: stage.scale,
-			scaleY: stage.scale,
-			x: stage.x,
-			y: stage.y,
-			easing: Konva.Easings.EaseInOut,
-		}).play();
-	}, [stage]);
+	const stageRef = useRef<Stage | null>(null);
 
 	return {
 		canvaHeight,
@@ -134,6 +128,7 @@ export function useBuisness() {
 		initailWrapperY,
 		initionalStage,
 		setStage,
+		stage,
 		stageRef,
 	};
 }

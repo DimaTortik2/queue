@@ -3,6 +3,7 @@ import { CONSTS } from '../consts';
 import { selectedUserAtom } from '../../../app/strore/atoms';
 import type { IStage, IUser } from '../interfaces';
 import { getTransformStateYToCenterSelectedUser } from '../helpers/get-transform-state-y-to-center-selected-user';
+import type { Stage } from 'konva/lib/Stage';
 
 interface IProps {
 	users: IUser[];
@@ -13,6 +14,8 @@ interface IProps {
 	resetUserData: () => void;
 	initailWrapperX: number;
 	setStage: React.Dispatch<React.SetStateAction<IStage>>;
+	stageRef: React.RefObject<Stage | null>;
+	zoomTo: (stage: IStage) => void;
 }
 
 export function useUserClick({
@@ -21,6 +24,8 @@ export function useUserClick({
 	users,
 	initailWrapperX,
 	setStage,
+	stageRef,
+	zoomTo,
 }: IProps) {
 	const [selectedUser, setSelectedUser] = useAtom(selectedUserAtom);
 
@@ -28,14 +33,18 @@ export function useUserClick({
 		if (selectedUser !== null) {
 			// unzoom
 
-			setStage({
+			const newStage = {
 				x: initailWrapperX * CONSTS.initialScale,
 				y: getTransformStateYToCenterSelectedUser(
 					CONSTS.initialScale,
 					selectedUser.y
 				),
 				scale: CONSTS.initialScale,
-			});
+			};
+
+			zoomTo(newStage);
+
+			setStage(() => newStage);
 
 			resetUserData();
 
@@ -84,11 +93,15 @@ export function useUserClick({
 
 			const y = shiftToCenterY;
 
-			setStage({
+			const newStage = {
 				x,
 				y,
 				scale,
-			});
+			};
+
+			zoomTo(newStage);
+
+			setStage(() => newStage);
 
 			// shift others
 			shiftOtherUsers({ selectedUserId, selectedUserIndex });

@@ -1,12 +1,13 @@
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+// import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { Layout } from './layout';
 import { useBuisness } from '../hooks/use-buisness';
 import { useUserClick } from '../hooks/use-user-click';
-import { Avatar } from './avatar';
-import { Line } from './line';
+// import { Avatar } from './avatar';
+// import { Line } from './line';
 import { Layer, Stage } from 'react-konva';
 import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
 import { useAnimations } from '../hooks/use-animations';
+import { useScaleStage } from '../hooks/useScaleStage';
 
 // export function MainPage() {
 // 	const {
@@ -109,21 +110,34 @@ export function MainPage() {
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
-		initionalStage,
 		setStage,
+		stage,
 		stageRef,
 	} = useBuisness();
+
+	const { userSprings, AnimatedCircle, zoomTo } = useAnimations({
+		users,
+		stage,
+		stageRef,
+	});
+
 	const { handleUserClick, resetUserClick } = useUserClick({
 		users,
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
 		setStage,
+		stageRef,
+		zoomTo,
 	});
 
-	const { userSprings, AnimatedCircle } = useAnimations({
-		users,
+	const { handleTouchEnd, handleTouchMove, handleWheel } = useScaleStage({
+		stage,
+		setStage,
+		maxScale: 1.5,
+		minScale: 0.04,
 	});
+	
 
 	return (
 		<Layout>
@@ -131,10 +145,10 @@ export function MainPage() {
 				ref={stageRef}
 				width={window.innerWidth}
 				height={window.innerHeight}
-				x={initionalStage.x}
-				y={initionalStage.y}
-				scaleX={initionalStage.scale}
-				scaleY={initionalStage.scale}
+				scaleX={stage.scale}
+				scaleY={stage.scale}
+				x={stage.x}
+				y={stage.y}
 				draggable
 				onPointerClick={(
 					e: KonvaEventObject<PointerEvent, Node<NodeConfig>>
@@ -143,14 +157,9 @@ export function MainPage() {
 						resetUserClick();
 					}
 				}}
-				// minScale={0.04}
-				// maxScale={1.5}
-				// initialPositionX={initionalTransformState.x}
-				// initialPositionY={initionalTransformState.y}
-				// initialScale={initionalTransformState.scale}
-				// doubleClick={{ disabled: true }}
-				// wheel={{ step: 1 }}
-				// smooth
+				onTouchMove={handleTouchMove}
+				onTouchEnd={handleTouchEnd}
+				onWheel={handleWheel}
 			>
 				<Layer>
 					{userSprings.map(({ x, y }, i) => (
