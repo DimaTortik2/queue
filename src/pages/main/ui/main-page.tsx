@@ -1,13 +1,13 @@
-// import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { Layout } from './layout';
 import { useBuisness } from '../hooks/use-buisness';
 import { useUserClick } from '../hooks/use-user-click';
 // import { Avatar } from './avatar';
 // import { Line } from './line';
 import { Layer, Stage } from 'react-konva';
-import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
 import { useAnimations } from '../hooks/use-animations';
-import { useScaleStage } from '../hooks/useScaleStage';
+import { useStage } from '../hooks/use-stage';
+import { User } from './user';
+import { STAGE } from '../consts';
 
 // export function MainPage() {
 // 	const {
@@ -102,42 +102,38 @@ import { useScaleStage } from '../hooks/useScaleStage';
 
 export function MainPage() {
 	const {
-		canvaHeight,
-		canvaWidth,
 		users,
 		initialLines,
 		lines,
+		initionalStage,
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
-		setStage,
-		stage,
+		initialUsers,
 		stageRef,
 	} = useBuisness();
 
-	const { userSprings, AnimatedCircle, zoomTo } = useAnimations({
-		users,
-		stage,
+	// console.log(initialUsers);
+
+	const { zoomTo } = useAnimations({
 		stageRef,
 	});
 
-	const { handleUserClick, resetUserClick } = useUserClick({
+	const { handleUserClick, onPointerClick } = useUserClick({
 		users,
 		shiftOtherUsers,
 		resetUserData,
 		initailWrapperX,
-		setStage,
 		stageRef,
 		zoomTo,
+		initionalStage,
 	});
 
-	const { handleTouchEnd, handleTouchMove, handleWheel } = useScaleStage({
-		stage,
-		setStage,
-		maxScale: 1.5,
-		minScale: 0.04,
+	const { handleTouchEnd, handleTouchMove, handleWheel } = useStage({
+		stageRef,
+		maxScale: STAGE.maxScale,
+		minScale: STAGE.minScale,
 	});
-	
 
 	return (
 		<Layout>
@@ -145,36 +141,32 @@ export function MainPage() {
 				ref={stageRef}
 				width={window.innerWidth}
 				height={window.innerHeight}
-				scaleX={stage.scale}
-				scaleY={stage.scale}
-				x={stage.x}
-				y={stage.y}
+				scaleX={initionalStage.scale}
+				scaleY={initionalStage.scale}
+				x={initionalStage.x}
+				y={initionalStage.y}
 				draggable
-				onPointerClick={(
-					e: KonvaEventObject<PointerEvent, Node<NodeConfig>>
-				) => {
-					if (e.target === e.currentTarget) {
-						resetUserClick();
-					}
-				}}
+				onPointerClick={onPointerClick}
 				onTouchMove={handleTouchMove}
 				onTouchEnd={handleTouchEnd}
 				onWheel={handleWheel}
 			>
 				<Layer>
-					{userSprings.map(({ x, y }, i) => (
-						<AnimatedCircle
-							x={x}
-							y={y}
+					{users.map((user, i) => (
+						<User
+							initialX={initialUsers[i].x}
+							initialY={initialUsers[i].y}
+							x={user.x}
+							y={user.y}
 							radius={250}
 							fill={'#550000'}
 							onPointerClick={() => {
 								handleUserClick({
-									selectedUserId: users[i].id,
+									selectedUserId: user.id,
 									selectedUserIndex: i,
 								});
 							}}
-							key={users[i].id}
+							key={user.id}
 						/>
 					))}
 				</Layer>

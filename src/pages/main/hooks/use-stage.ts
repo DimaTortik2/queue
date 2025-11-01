@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { IStage } from '../interfaces';
+import type { Stage } from 'konva/lib/Stage';
 
 interface ICoords {
 	x: number;
@@ -18,14 +18,13 @@ const getDistance = (p1: ICoords, p2: ICoords): number => {
 	return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
 
-export function useScaleStage({
-	stage,
-	setStage,
+export function useStage({
+	stageRef,
 	maxScale,
 	minScale,
 }: {
-	stage: IStage;
-	setStage: React.Dispatch<React.SetStateAction<IStage>>;
+	stageRef: React.RefObject<Stage | null>;
+
 	maxScale: number;
 	minScale: number;
 }) {
@@ -39,11 +38,13 @@ export function useScaleStage({
 		//    2. вычислить уже непосредственно насколько надо сдвинуть stage чтобы эта точка попала под координаты курсора
 		//				на новом scale
 		e.evt.preventDefault();
+		const stage = stageRef.current;
+		if (!stage) return;
 
-		const scaleBy = 1.03;
-		const stage = e.target.getStage();
+		const scaleBy = 1.09;
 		const oldScale = stage.scaleX();
-		const screenPointCoords = stage.getPointerPosition();
+
+		const screenPointCoords = { x: e.evt.clientX, y: e.evt.clientY };
 
 		let direction = e.evt.deltaY > 0 ? -1 : 1;
 		let newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
@@ -60,11 +61,13 @@ export function useScaleStage({
 		};
 
 		// из формулы (1) следует => сдвиг stage = позиция точки на экране - координаты на stage * scale
-		setStage(() => ({
-			scale: newScale,
+		const newPos = {
 			x: screenPointCoords.x - stagePointCoords.x * newScale,
 			y: screenPointCoords.y - stagePointCoords.y * newScale,
-		}));
+		};
+
+		stage.scale({ x: newScale, y: newScale });
+		stage.position(newPos);
 	};
 
 	const prevCenter = useRef<ICoords | null>(null);
@@ -78,7 +81,8 @@ export function useScaleStage({
 
 	const handleTouchMove = useCallback(
 		(e: any) => {
-			const stage = e.target.getStage();
+			const stage = stageRef.current;
+			if (!stage) return;
 			const touch1 = e.evt.touches[0];
 			const touch2 = e.evt.touches[1];
 
@@ -120,18 +124,19 @@ export function useScaleStage({
 				const dx = newCenter.x - prevCenter.current.x;
 				const dy = newCenter.y - prevCenter.current.y;
 
-				setStage(() => ({
+				const newPos = {
 					x: newCenter.x - stagePointCoords.x * newScale + dx,
 					y: newCenter.y - stagePointCoords.y * newScale + dy,
-					scale: newScale,
-				}));
+				};
 
-				//
+				stage.scale({ x: newScale, y: newScale });
+				stage.position(newPos);
+
 				prevCenter.current = newCenter;
 				prevDistance.current = newDistance;
 			}
 		},
-		[dragStopped, prevCenter, prevDistance, stage]
+		[dragStopped, prevCenter, prevDistance]
 	);
 
 	return {

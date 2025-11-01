@@ -1,37 +1,30 @@
 import { useMemo, useRef, useState } from 'react';
-import { CONSTS } from '../consts';
 import type { ILine, IStage, IUser, IUserDataElement } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
+import { AVATAR, STAGE, USERS_COUNT_TEMP } from '../consts';
+import { getStageXToCenterQueue } from '../helpers/get-stage-x-to-center-queue';
 
 export function useBuisness() {
 	const userData: IUserDataElement[] = [];
-	for (let i = 0; i < CONSTS.userCount; i++) {
+	for (let i = 0; i < USERS_COUNT_TEMP; i++) {
 		userData.push({
 			avaSrc: '/ava.png',
 			id: i,
 		});
 	}
 
-	const canvaHeight: number = 2000 + userData.length * (CONSTS.avatarSize + 50);
-	const canvaWidth: number = 10000;
-
-	const queueWidth: number =
-		CONSTS.rightInitialAvatarX - CONSTS.leftInitialAvatarX;
-	const windowLeftPadding: number =
-		(window.innerWidth / CONSTS.initialScale - queueWidth) / 2;
-	const initailWrapperX: number = -(
-		CONSTS.leftInitialAvatarX - windowLeftPadding
-	);
-
-	const initailWrapperY: number = 0;
+	const initailWrapperX: number = getStageXToCenterQueue(STAGE.initial.scale);
+	const initailWrapperY: number = (AVATAR.radius / STAGE.initial.scale) * 4;
 
 	const initialUsers: IUser[] = useMemo(
 		() =>
 			userData.map((user, i) => {
 				const isLeft = i % 2 == 0;
 				return {
-					x: isLeft ? CONSTS.leftInitialAvatarX : CONSTS.rightInitialAvatarX,
-					y: CONSTS.initialAvatarY + CONSTS.initialdiffBetweenAvatars * i,
+					x: isLeft
+						? AVATAR.initial.x
+						: AVATAR.initial.x + AVATAR.initial.space.x,
+					y: AVATAR.initial.y + AVATAR.initial.space.y * i,
 					avaSrc: user.avaSrc,
 					id: user.id,
 				};
@@ -107,18 +100,14 @@ export function useBuisness() {
 
 	//
 	const initionalStage: IStage = {
-		scale: CONSTS.initialScale,
-		x: initailWrapperX * CONSTS.initialScale,
-		y: initailWrapperY * CONSTS.initialScale,
+		scale: STAGE.initial.scale,
+		x: initailWrapperX,
+		y: initailWrapperY * STAGE.initial.scale,
 	};
-
-	const [stage, setStage] = useState<IStage>(initionalStage);
 
 	const stageRef = useRef<Stage | null>(null);
 
 	return {
-		canvaHeight,
-		canvaWidth,
 		users,
 		lines,
 		shiftOtherUsers,
@@ -127,8 +116,7 @@ export function useBuisness() {
 		initailWrapperX,
 		initailWrapperY,
 		initionalStage,
-		setStage,
-		stage,
 		stageRef,
+		initialUsers,
 	};
 }
