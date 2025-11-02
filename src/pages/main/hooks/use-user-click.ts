@@ -78,7 +78,7 @@ export function useUserClick({
 				const selectedUser = users[selectedUserIndex];
 
 				// set current user
-				setSelectedUser(selectedUser);
+				setSelectedUser({ ...selectedUser, index: selectedUserIndex });
 
 				// zoom to User
 				const isLeft = selectedUserIndex % 2 === 0;
@@ -124,14 +124,14 @@ export function useUserClick({
 	);
 
 	const clickTimeout = useRef<NodeJS.Timeout | null>(null);
-	const CLICK_DELAY = 180; 
+	const CLICK_DELAY = 180;
 
 	function onPointerClick(e: KonvaEventObject<PointerEvent, Node<NodeConfig>>) {
 		if (e.target === e.currentTarget) {
 			if (clickTimeout.current) {
 				clearTimeout(clickTimeout.current);
 				clickTimeout.current = null;
-				console.log('логика двойного клика');
+				//логика двойного клика
 				resetUserClick();
 				zoomTo({
 					x: getStageXToCenterQueue(0.1),
@@ -144,7 +144,7 @@ export function useUserClick({
 
 			clickTimeout.current = setTimeout(() => {
 				clickTimeout.current = null;
-				console.log('логика одиночного клика');
+				//логика одиночного клика
 				resetUserClick();
 			}, CLICK_DELAY);
 		}

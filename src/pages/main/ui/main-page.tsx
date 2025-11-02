@@ -7,7 +7,11 @@ import { Layer, Stage } from 'react-konva';
 import { useAnimations } from '../hooks/use-animations';
 import { useStage } from '../hooks/use-stage';
 import { User } from './user';
-import { STAGE } from '../consts';
+import { AVATAR, COLORS, KANVA, STAGE } from '../consts';
+import { UserPopUp } from './userPopUp';
+import { selectedUserAtom, userIdAtom } from '../../../app/strore/atoms';
+import { useAtomValue } from 'jotai';
+import { ButtonKanva } from './button-kanva';
 
 // export function MainPage() {
 // 	const {
@@ -135,6 +139,9 @@ export function MainPage() {
 		minScale: STAGE.minScale,
 	});
 
+	const selectedUser = useAtomValue(selectedUserAtom);
+	const userId = useAtomValue(userIdAtom);
+
 	return (
 		<Layout>
 			<Stage
@@ -152,23 +159,62 @@ export function MainPage() {
 				onWheel={handleWheel}
 			>
 				<Layer>
-					{users.map((user, i) => (
-						<User
-							initialX={initialUsers[i].x}
-							initialY={initialUsers[i].y}
-							x={user.x}
-							y={user.y}
-							radius={250}
-							fill={'#550000'}
-							onPointerClick={() => {
-								handleUserClick({
-									selectedUserId: user.id,
-									selectedUserIndex: i,
-								});
-							}}
-							key={user.id}
-						/>
-					))}
+					{users.map((user, i) => {
+						const isLeft = i % 2 === 0;
+						const popUpX = isLeft
+							? user.x + AVATAR.radius * 1.5
+							: user.x - KANVA.size.userPopUp.width - AVATAR.radius * 1.5;
+						const popUpY =
+							user.y - KANVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
+
+						return (
+							<User
+								initialX={initialUsers[i].x}
+								initialY={initialUsers[i].y}
+								x={user.x}
+								y={user.y}
+								radius={AVATAR.radius}
+								fill={'#550000'}
+								onPointerClick={() => {
+									handleUserClick({
+										selectedUserId: user.id,
+										selectedUserIndex: i,
+									});
+								}}
+								key={user.id}
+								userPopup={
+									<UserPopUp
+										width={KANVA.size.userPopUp.width}
+										height={KANVA.size.userPopUp.height}
+										x={popUpX}
+										y={popUpY}
+										isVisible={i === selectedUser?.index}
+										userName={
+											selectedUser && selectedUser?.id === userId
+												? 'Вы'
+												: selectedUser?.name
+										}
+										positionInQueue={selectedUser ? selectedUser?.index + 1 : 0}
+										actionButton={
+											<ButtonKanva
+												width={KANVA.size.userPopUp.width}
+												height={KANVA.size.userPopUpButton.height}
+												localGroupX={0}
+												localGroupY={KANVA.size.userPopUp.height}
+												onClick={() => console.log('hello World')}
+												bgColor={COLORS.bg.leave}
+												color={COLORS.text}
+												fontSize={KANVA.font.size / 1.5}
+												cornerRadius={60}
+											>
+												Покинуть очередь
+											</ButtonKanva>
+										}
+									/>
+								}
+							/>
+						);
+					})}
 				</Layer>
 			</Stage>
 

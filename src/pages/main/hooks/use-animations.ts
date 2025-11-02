@@ -8,7 +8,7 @@ export function useAnimations({
 	stageRef: React.RefObject<Stage | null>;
 }) {
 	const zoomTo = (stage: IStage) => {
-		if (!stageRef || !stageRef.current) return;
+		if (!stageRef.current) return;
 
 		new Konva.Tween({
 			node: stageRef.current,

@@ -9,12 +9,13 @@ export function useBuisness() {
 	for (let i = 0; i < USERS_COUNT_TEMP; i++) {
 		userData.push({
 			avaSrc: '/ava.png',
+			name: 'Дима',
 			id: i,
 		});
 	}
 
 	const initailWrapperX: number = getStageXToCenterQueue(STAGE.initial.scale);
-	const initailWrapperY: number = (AVATAR.radius / STAGE.initial.scale) * 4;
+	const initailWrapperY: number = AVATAR.radius / STAGE.initial.scale;
 
 	const initialUsers: IUser[] = useMemo(
 		() =>
@@ -26,6 +27,7 @@ export function useBuisness() {
 						: AVATAR.initial.x + AVATAR.initial.space.x,
 					y: AVATAR.initial.y + AVATAR.initial.space.y * i,
 					avaSrc: user.avaSrc,
+					name: user.name,
 					id: user.id,
 				};
 			}),

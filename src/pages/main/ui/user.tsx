@@ -1,9 +1,22 @@
 import Konva from 'konva';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { Circle } from 'react-konva';
 import { AVATAR } from '../consts';
 
-export function User({ x, y, initialX, initialY, ...props }: Konva.NodeConfig) {
+interface IProps extends Konva.NodeConfig {
+	initialX: number;
+	initialY: number;
+	userPopup: ReactNode;
+}
+
+export function User({
+	x,
+	y,
+	initialX,
+	initialY,
+	userPopup,
+	...props
+}: IProps) {
 	const circleRef = useRef(null);
 
 	useEffect(() => {
@@ -19,13 +32,16 @@ export function User({ x, y, initialX, initialY, ...props }: Konva.NodeConfig) {
 	}, [x, y]);
 
 	return (
-		<Circle
-			ref={circleRef}
-			x={initialX}
-			y={initialY}
-			radius={AVATAR.radius}
-			fill={'#550000'}
-			{...props}
-		/>
+		<>
+			<Circle
+				ref={circleRef}
+				x={initialX}
+				y={initialY}
+				radius={AVATAR.radius}
+				fill={'#550000'}
+				{...props}
+			/>
+			{userPopup}
+		</>
 	);
 }

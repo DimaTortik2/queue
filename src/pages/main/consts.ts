@@ -9,7 +9,7 @@ export const STAGE = {
 };
 
 export const AVATAR = {
-	radius: 50,
+	radius: 250,
 	initial: {
 		x: 0,
 		y: 0,
@@ -30,15 +30,39 @@ function createDEVICE() {
 		mobile: {
 			selectedScale: selectedMobileScale,
 			selectedMargin: {
-				x: selectedMobileScale * AVATAR.radius * 6,
+				x: selectedMobileScale * AVATAR.radius * 0.75,
 			},
 		},
 		pc: {
 			selectedScale: selectedPcScale,
 			selectedMargin: {
-				x: selectedPcScale * AVATAR.radius * 13,
+				x: selectedPcScale * AVATAR.radius * 2.5,
 			},
 		},
 	};
 }
 export const DEVICE = createDEVICE();
+
+export const COLORS = {
+	text: '#FFFFFF',
+	text78: '#ffffffd0',
+	text70: '#ffffffb9',
+	bg: {
+		leave: '#A64F4F',
+	},
+};
+
+export const KANVA = {
+	font: {
+		size: 120,
+	},
+	size: {
+		userPopUp: {
+			width: 900,
+			height: 430,
+		},
+		userPopUpButton: {
+			height: 150,
+		},
+	},
+};
