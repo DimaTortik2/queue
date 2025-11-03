@@ -12,6 +12,7 @@ import { UserPopUp } from './userPopUp';
 import { selectedUserAtom, userIdAtom } from '../../../app/strore/atoms';
 import { useAtomValue } from 'jotai';
 import { ButtonKanva } from './button-kanva';
+import { UserLine } from './kanvaLine';
 
 // export function MainPage() {
 // 	const {
@@ -117,8 +118,6 @@ export function MainPage() {
 		stageRef,
 	} = useBuisness();
 
-	// console.log(initialUsers);
-
 	const { zoomTo } = useAnimations({
 		stageRef,
 	});
@@ -142,6 +141,7 @@ export function MainPage() {
 	const selectedUser = useAtomValue(selectedUserAtom);
 	const userId = useAtomValue(userIdAtom);
 
+
 	return (
 		<Layout>
 			<Stage
@@ -159,13 +159,31 @@ export function MainPage() {
 				onWheel={handleWheel}
 			>
 				<Layer>
+					{lines.map((line, i) => {
+	
+						return (
+							<UserLine
+								initialX1={initialLines[i].x1}
+								initialY1={initialLines[i].y1}
+								initialX2={initialLines[i].x2}
+								initialY2={initialLines[i].y2}
+								x1={line.x1}
+								y1={line.y1}
+								x2={line.x2}
+								y2={line.y2}
+								key={line.id}
+							/>
+						);
+					})}
 					{users.map((user, i) => {
 						const isLeft = i % 2 === 0;
 						const popUpX = isLeft
-							? user.x + AVATAR.radius * 1.5
-							: user.x - KANVA.size.userPopUp.width - AVATAR.radius * 1.5;
+							? user.x + AVATAR.radius * 2
+							: user.x - KANVA.size.userPopUp.width - AVATAR.radius * 2;
 						const popUpY =
 							user.y - KANVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
+
+
 
 						return (
 							<User

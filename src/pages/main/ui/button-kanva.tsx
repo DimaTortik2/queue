@@ -26,20 +26,6 @@ export function ButtonKanva({
 	fontSize,
 	cornerRadius,
 }: IProps) {
-	console.log({
-		children,
-		onClick,
-		color,
-		width,
-		height,
-		paddingLeft,
-		paddingTop,
-		x,
-		y,
-		bgColor,
-	});
-
-	console.log({ x, y });
 	return (
 		<Group
 			x={x ? x : localGroupX}

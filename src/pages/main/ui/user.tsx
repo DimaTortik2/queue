@@ -17,18 +17,18 @@ export function User({
 	userPopup,
 	...props
 }: IProps) {
-	const circleRef = useRef(null);
+	const circleRef = useRef<Konva.Circle>(null);
 
 	useEffect(() => {
-		if (circleRef.current) {
-			new Konva.Tween({
-				node: circleRef.current,
-				duration: 0.5,
-				x: x,
-				y: y,
-				easing: Konva.Easings.EaseInOut,
-			}).play();
-		}
+		const circle = circleRef.current;
+
+		if (!circle) return;
+		circle.to({
+			duration: 0.5,
+			x: x,
+			y: y,
+			easing: Konva.Easings.EaseInOut,
+		});
 	}, [x, y]);
 
 	return (
