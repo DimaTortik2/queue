@@ -1,12 +1,7 @@
-export const USERS_COUNT_TEMP = 30;
+import { getStageXToCenterQueue } from '../../konva/lib/helpers/get-stage-x-to-center-queue';
 
-export const STAGE = {
-	initial: {
-		scale: 0.25,
-	},
-	maxScale: 1.5,
-	minScale: 0.04,
-};
+export const USERS_COUNT_TEMP = 30;
+export const USER_ID_TEMP = 2;
 
 export const AVATAR = {
 	radius: 250,
@@ -20,7 +15,21 @@ export const AVATAR = {
 	},
 };
 
-function createDEVICE() {
+export const STAGE = (() => {
+	const initScale = 0.25;
+
+	return {
+		initial: {
+			scale: initScale,
+			x: getStageXToCenterQueue(initScale),
+			y: AVATAR.radius,
+		},
+		maxScale: 1.5,
+		minScale: 0.04,
+	};
+})();
+
+export const DEVICE = (() => {
 	const selectedMobileScale = STAGE.initial.scale * 0.9;
 	const selectedPcScale = STAGE.initial.scale * 2;
 
@@ -40,8 +49,7 @@ function createDEVICE() {
 			},
 		},
 	};
-}
-export const DEVICE = createDEVICE();
+})();
 
 export const COLORS = {
 	text: '#FFFFFF',
@@ -52,7 +60,7 @@ export const COLORS = {
 	},
 };
 
-export const KANVA = {
+export const KONVA = {
 	font: {
 		size: 120,
 	},

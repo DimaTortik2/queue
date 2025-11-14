@@ -1,10 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
-import type { ILine, IStage, IUser, IUserDataElement } from '../interfaces';
-import type { Stage } from 'konva/lib/Stage';
-import { AVATAR, STAGE, USERS_COUNT_TEMP } from '../consts';
-import { getStageXToCenterQueue } from '../helpers/get-stage-x-to-center-queue';
+import { useMemo, useState } from 'react';
+import type { ILine, IUser, IUserDataElement } from '../interfaces';
+import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
 
-export function useBuisness() {
+export function useInitializeData() {
+	// С Бэкэнда
 	const userData: IUserDataElement[] = [];
 	for (let i = 0; i < USERS_COUNT_TEMP; i++) {
 		userData.push({
@@ -13,9 +12,6 @@ export function useBuisness() {
 			id: i,
 		});
 	}
-
-	const initailWrapperX: number = getStageXToCenterQueue(STAGE.initial.scale);
-	const initailWrapperY: number = AVATAR.radius / STAGE.initial.scale;
 
 	const initialUsers: IUser[] = useMemo(
 		() =>
@@ -70,55 +66,11 @@ export function useBuisness() {
 		return lines;
 	}, [users]);
 
-	const shiftOtherUsers = ({
-		selectedUserId,
-		selectedUserIndex,
-	}: {
-		selectedUserId: IUser['id'];
-		selectedUserIndex: number;
-	}) => {
-		const shiftY = window.innerHeight / 2;
-
-		const newUsers = users.map((user, i) => {
-			if (selectedUserId !== user.id) {
-				// to above users
-				if (i < selectedUserIndex) {
-					return { ...user, y: user.y - shiftY };
-				}
-				// to below users
-				else if (i > selectedUserIndex) {
-					return { ...user, y: user.y + shiftY };
-				}
-			}
-			return user;
-		});
-
-		setUsers(newUsers);
-	};
-
-	const resetUserData = () => {
-		setUsers(initialUsers);
-	};
-
-	//
-	const initionalStage: IStage = {
-		scale: STAGE.initial.scale,
-		x: initailWrapperX,
-		y: initailWrapperY * STAGE.initial.scale,
-	};
-
-	const stageRef = useRef<Stage | null>(null);
-
 	return {
+		initialUsers,
+		initialLines,
 		users,
 		lines,
-		shiftOtherUsers,
-		initialLines,
-		resetUserData,
-		initailWrapperX,
-		initailWrapperY,
-		initionalStage,
-		stageRef,
-		initialUsers,
+		setUsers,
 	};
 }

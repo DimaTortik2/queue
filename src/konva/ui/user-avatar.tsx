@@ -1,7 +1,7 @@
 import Konva from 'konva';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Circle } from 'react-konva';
-import { AVATAR } from '../consts';
+import { AVATAR } from '../../app/config/consts';
 
 interface IProps extends Konva.NodeConfig {
 	initialX: number;
@@ -9,7 +9,7 @@ interface IProps extends Konva.NodeConfig {
 	userPopup: ReactNode;
 }
 
-export function User({
+export function UserAvatar({
 	x,
 	y,
 	initialX,

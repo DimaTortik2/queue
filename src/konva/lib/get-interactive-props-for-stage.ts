@@ -18,7 +18,7 @@ const getDistance = (p1: ICoords, p2: ICoords): number => {
 	return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
 
-export function useStage({
+export function getInteractivePropsForStage({
 	stageRef,
 	maxScale,
 	minScale,
@@ -30,7 +30,7 @@ export function useStage({
 }) {
 	Konva.hitOnDragEnabled = true;
 
-	const handleWheel = (e: any) => {
+	const onWheel = (e: any) => {
 		// наша тактика тут :
 		// 1. вычислить новый скейл
 		// 2. найти насколько надо сдвинуть stage дабы точка под курсором там и осталась при новом скейле:
@@ -74,12 +74,12 @@ export function useStage({
 	const prevDistance = useRef<number>(0);
 	const dragStopped = useRef<boolean>(false);
 
-	const handleTouchEnd = () => {
+	const onTouchEnd = () => {
 		prevCenter.current = null;
 		prevDistance.current = 0;
 	};
 
-	const handleTouchMove = useCallback(
+	const onTouchMove = useCallback(
 		(e: any) => {
 			const stage = stageRef.current;
 			if (!stage) return;
@@ -140,8 +140,8 @@ export function useStage({
 	);
 
 	return {
-		handleWheel,
-		handleTouchEnd,
-		handleTouchMove,
+		onWheel,
+		onTouchEnd,
+		onTouchMove,
 	};
 }

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Rect, Text, Group } from 'react-konva';
-import type { IReactKonvaUiProps } from './kanva.ui';
-import { COLORS, KANVA } from '../consts';
+import type { IReactKonvaUiProps } from '../interfaces/kanva.interface';
+import { COLORS, KONVA } from '../../app/config/consts';
 
 interface IProps extends IReactKonvaUiProps {
 	children?: ReactNode;
@@ -45,7 +45,7 @@ export function ButtonKanva({
 				text={children ? String(children) : undefined}
 				x={paddingLeft ? paddingLeft : 0}
 				y={paddingTop ? paddingTop : 0}
-				fontSize={fontSize ? fontSize : KANVA.font.size}
+				fontSize={fontSize ? fontSize : KONVA.font.size}
 				fill={color ? color : COLORS.text}
 				width={width}
 				height={height}

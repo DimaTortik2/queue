@@ -1,68 +1,79 @@
 import { useAtom } from 'jotai';
 import { selectedUserAtom } from '../../../app/strore/atoms';
-import type { IStage, IUser } from '../interfaces';
-import { getTransformStateYToCenterSelectedUser } from '../helpers/get-transform-state-y-to-center-selected-user';
+import type { IUser } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
 import { useCallback, useRef } from 'react';
-import { AVATAR, DEVICE, STAGE } from '../consts';
+import { DEVICE, STAGE } from '../../../app/config/consts';
 import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
-import { getStageXToCenterQueue } from '../helpers/get-stage-x-to-center-queue';
+import { setStageSmooth } from '../../../konva/lib/set-stage-smooth';
+import { getTransformStateYToCenterSelectedUser } from '../../../konva/lib/helpers/get-transform-state-y-to-center-selected-user';
+import { getTransformStateXToCenterSelectedUser } from '../../../konva/lib/helpers/get-transform-state-x-to-center-selected-user';
+import { getStageXToCenterQueue } from '../../../konva/lib/helpers/get-stage-x-to-center-queue';
 
 interface IProps {
+	initialUsers: IUser[];
 	users: IUser[];
-	shiftOtherUsers: (idAndIndex: {
-		selectedUserId: IUser['id'];
-		selectedUserIndex: number;
-	}) => void;
-	resetUserData: () => void;
-	initailWrapperX: number;
 	stageRef: React.RefObject<Stage | null>;
-	zoomTo: (stage: IStage) => void;
-	initionalStage: IStage;
+	setUsers: React.Dispatch<React.SetStateAction<IUser[]>>;
 }
 
 export function useUserClick({
-	resetUserData,
-	shiftOtherUsers,
+	initialUsers,
 	users,
-	initailWrapperX,
+	setUsers,
 	stageRef,
-	zoomTo,
-	initionalStage,
 }: IProps) {
 	const [selectedUser, setSelectedUser] = useAtom(selectedUserAtom);
 
-	const resetUserClick = useCallback(() => {
-		if (!stageRef.current) return;
-		if (selectedUser !== null) {
-			// unzoom
+	const shiftOtherUsers = ({
+		selectedUserId,
+		selectedUserIndex,
+	}: {
+		selectedUserId: IUser['id'];
+		selectedUserIndex: number;
+	}) => {
+		const shiftY = window.innerHeight / 2;
 
-			if (!DEVICE.isMobile) {
-				const x = initailWrapperX;
-				const y = getTransformStateYToCenterSelectedUser(
-					STAGE.initial.scale,
-					selectedUser.y
-				);
-
-				const scale = STAGE.initial.scale;
-
-				zoomTo({ x, y, scale });
+		const newUsers = users.map((user, i) => {
+			if (selectedUserId !== user.id) {
+				// to above users
+				if (i < selectedUserIndex) {
+					return { ...user, y: user.y - shiftY };
+				}
+				// to below users
+				else if (i > selectedUserIndex) {
+					return { ...user, y: user.y + shiftY };
+				}
 			}
+			return user;
+		});
 
-			resetUserData();
+		setUsers(newUsers);
+	};
 
-			setSelectedUser(null);
+	const resetAvatarClick = useCallback(() => {
+		// если пользователь не выделен, то нечего и ресетать
+		if (!stageRef.current || selectedUser === null) return;
+
+		// на телефоне более свободное поведение (только центровка)
+		if (DEVICE.isMobile) {
+			const scale = stageRef.current.scaleX();
+			const x = getStageXToCenterQueue(scale);
+			const y = stageRef.current.y();
+			setStageSmooth({ newStage: { x, y, scale }, stageRef });
+		} else {
+			// на пк четкое отдаление
+			const scale = STAGE.initial.scale;
+			const x = STAGE.initial.x;
+			const y = getTransformStateYToCenterSelectedUser(scale, selectedUser.y);
+			setStageSmooth({ newStage: { x, y, scale }, stageRef });
 		}
-	}, [
-		selectedUser,
-		initailWrapperX,
-		zoomTo,
-		resetUserData,
-		setSelectedUser,
-		stageRef,
-	]);
 
-	const handleUserClick = useCallback(
+		setUsers(initialUsers);
+		setSelectedUser(null);
+	}, [selectedUser, setStageSmooth, setSelectedUser, stageRef]);
+
+	const handleAvatarClick = useCallback(
 		({
 			selectedUserId,
 			selectedUserIndex,
@@ -71,53 +82,38 @@ export function useUserClick({
 			selectedUserIndex: number;
 		}) => {
 			if (!stageRef.current) return;
-			// reset if toggled
-			resetUserClick();
+			// ресетать , если кликнули повторно
+
+			if (selectedUser !== null) {
+				resetAvatarClick();
+			}
 
 			if (selectedUser === null) {
 				const selectedUser = users[selectedUserIndex];
 
-				// set current user
 				setSelectedUser({ ...selectedUser, index: selectedUserIndex });
 
-				// zoom to User
-				const isLeft = selectedUserIndex % 2 === 0;
 				const scale = DEVICE.isMobile
 					? DEVICE.mobile.selectedScale
 					: DEVICE.pc.selectedScale;
-
-				const avatarMarginX = DEVICE.isMobile
-					? DEVICE.mobile.selectedMargin.x
-					: DEVICE.pc.selectedMargin.x;
-
-				const shiftToLeftX = isLeft
-					? scale * users[0].x - avatarMarginX - (AVATAR.radius / 2) * scale
-					: scale * users[1].x +
-					  avatarMarginX -
-					  window.innerWidth +
-					  (AVATAR.radius / 2) * scale;
-
-				const shiftToCenterY = getTransformStateYToCenterSelectedUser(
+				const x = getTransformStateXToCenterSelectedUser(
 					scale,
-					selectedUser.y
+					users,
+					selectedUserIndex
 				);
-
-				const x = -shiftToLeftX;
-
-				const y = shiftToCenterY;
-
-				zoomTo({ x, y, scale });
+				const y = getTransformStateYToCenterSelectedUser(scale, selectedUser.y);
+				setStageSmooth({ newStage: { x, y, scale }, stageRef });
 
 				// shift others
 				shiftOtherUsers({ selectedUserId, selectedUserIndex });
 			}
 		},
 		[
-			resetUserClick,
+			resetAvatarClick,
 			selectedUser,
 			users,
 			setSelectedUser,
-			zoomTo,
+			setStageSmooth,
 			shiftOtherUsers,
 			stageRef,
 		]
@@ -125,30 +121,40 @@ export function useUserClick({
 
 	const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 	const CLICK_DELAY = 180;
+	function handleStageClick(
+		e: KonvaEventObject<PointerEvent, Node<NodeConfig>>
+	) {
+		const handleSingleClick = () => {
+			resetAvatarClick();
+		};
 
-	function onPointerClick(e: KonvaEventObject<PointerEvent, Node<NodeConfig>>) {
+		const handleDoubleClick = () => {
+			resetAvatarClick();
+
+			setStageSmooth({
+				newStage: {
+					x: getStageXToCenterQueue(0.1),
+					y: STAGE.initial.y,
+					scale: 0.1,
+				},
+				stageRef,
+			});
+		};
+
 		if (e.target === e.currentTarget) {
 			if (clickTimeout.current) {
 				clearTimeout(clickTimeout.current);
 				clickTimeout.current = null;
-				//логика двойного клика
-				resetUserClick();
-				zoomTo({
-					x: getStageXToCenterQueue(0.1),
-					y: initionalStage.y,
-					scale: 0.1,
-				});
-
+				handleDoubleClick();
 				return;
 			}
 
 			clickTimeout.current = setTimeout(() => {
 				clickTimeout.current = null;
-				//логика одиночного клика
-				resetUserClick();
+				handleSingleClick();
 			}, CLICK_DELAY);
 		}
 	}
 
-	return { onPointerClick, handleUserClick };
+	return { handleStageClick, handleAvatarClick };
 }

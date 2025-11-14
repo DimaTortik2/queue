@@ -1,8 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Rect, Text, Group } from 'react-konva';
-import type { IReactKonvaUiProps } from './kanva.ui';
-import { COLORS, KANVA } from '../consts';
+import type { IReactKonvaUiProps } from '../interfaces/kanva.interface';
 import Konva from 'konva';
+import { COLORS, KONVA } from '../../app/config/consts';
 
 interface IProps extends IReactKonvaUiProps {
 	userName?: string;
@@ -24,10 +24,10 @@ export function UserPopUp({
 	isVisible,
 	color,
 }: IProps) {
-	const UserNameFontSize = KANVA.font.size * 2;
-	const placeFontSize = KANVA.font.size / 1.3;
+	const UserNameFontSize = KONVA.font.size * 2;
+	const placeFontSize = KONVA.font.size / 1.3;
 	const placeY = (paddingTop ? paddingTop : 0) + UserNameFontSize + 40;
-	const positionFontSize = KANVA.font.size;
+	const positionFontSize = KONVA.font.size;
 	const positionY = placeY - (positionFontSize - placeFontSize);
 
 	const groupRef = useRef<Konva.Group>(null);

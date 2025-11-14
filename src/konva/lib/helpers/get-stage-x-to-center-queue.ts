@@ -1,4 +1,4 @@
-import { AVATAR } from '../consts';
+import { AVATAR } from '../../../app/config/consts';
 
 export function getStageXToCenterQueue(scale: number) {
 	const queueWidth: number =
