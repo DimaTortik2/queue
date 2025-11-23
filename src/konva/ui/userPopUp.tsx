@@ -24,6 +24,8 @@ export function UserPopUp({
 	isVisible,
 	color,
 }: IProps) {
+	if (!isVisible) return;
+
 	const UserNameFontSize = KONVA.font.size * 2;
 	const placeFontSize = KONVA.font.size / 1.3;
 	const placeY = (paddingTop ? paddingTop : 0) + UserNameFontSize + 40;
@@ -36,25 +38,18 @@ export function UserPopUp({
 		const popUp = groupRef.current;
 		if (!popUp) return;
 
-		if (isVisible) {
-			popUp.visible(true);
-			new Konva.Tween({
-				node: popUp,
-				duration: 0.5,
-				opacity: 1,
-				easing: Konva.Easings.EaseInOut,
-			}).play();
-		} else {
-			new Konva.Tween({
-				node: popUp,
-				duration: 0.2,
-				opacity: 0,
-				easing: Konva.Easings.EaseInOut,
-				onFinish: () => {
-					popUp.visible(false);
-				},
-			}).play();
-		}
+		popUp.opacity(0);
+		popUp.scale({ x: 0.95, y: 0.95 });
+
+		const tween = new Konva.Tween({
+			node: popUp,
+			duration: 0.3, // Быстрее = плавнее для глаза
+			opacity: 1,
+			scaleX: 1,
+			scaleY: 1,
+			easing: Konva.Easings.EaseInOut, // Приятный отскок
+		});
+		tween.play();
 	}, [isVisible]);
 
 	return (
@@ -68,6 +63,7 @@ export function UserPopUp({
 				y={paddingTop ? paddingTop : 0}
 				fill={color ? color : COLORS.text78}
 				align='center'
+				listening={false}
 			/>
 			<Text
 				padding={5}
@@ -77,6 +73,7 @@ export function UserPopUp({
 				fontSize={placeFontSize}
 				fill={color ? color : COLORS.text70}
 				align='center'
+				listening={false}
 			/>
 			<Text
 				padding={5}
@@ -86,6 +83,7 @@ export function UserPopUp({
 				fontSize={positionFontSize}
 				fill={color ? color : COLORS.text}
 				align='center'
+				listening={false}
 			/>
 			{actionButton}
 		</Group>

@@ -7,10 +7,11 @@ export interface IUserDataElement {
 export type IUser = {
 	x: number;
 	y: number;
-	avaSrc: string;
-	name: string;
-	id: number;
 } & IUserDataElement;
+
+export type ISelectedUser = {
+	index: number;
+} & IUser;
 
 export type ILine = {
 	x1: number;

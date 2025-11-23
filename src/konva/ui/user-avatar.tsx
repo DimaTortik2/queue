@@ -1,12 +1,17 @@
 import Konva from 'konva';
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 import { Circle } from 'react-konva';
-import { AVATAR } from '../../app/config/consts';
+import { AVATAR, COLORS, KONVA, USER_ID_TEMP } from '../../app/config/consts';
+import { UserPopUp } from './userPopUp';
+import type { ISelectedUser } from '../../pages/main/interfaces';
+import { ButtonKanva } from './button-kanva';
 
 interface IProps extends Konva.NodeConfig {
 	initialX: number;
 	initialY: number;
-	userPopup: ReactNode;
+	isLeft: boolean;
+	isPopUpVisible: boolean;
+	selectedUser: ISelectedUser | null;
 }
 
 export function UserAvatar({
@@ -14,9 +19,15 @@ export function UserAvatar({
 	y,
 	initialX,
 	initialY,
-	userPopup,
+	selectedUser,
+	isLeft,
+	isPopUpVisible,
 	...props
 }: IProps) {
+	if (x === undefined || y === undefined) return;
+
+	console.log('rerender Avatar');
+
 	const circleRef = useRef<Konva.Circle>(null);
 
 	useEffect(() => {
@@ -31,6 +42,11 @@ export function UserAvatar({
 		});
 	}, [x, y]);
 
+	const popUpX = isLeft
+		? x + AVATAR.radius * 2
+		: x - KONVA.size.userPopUp.width - AVATAR.radius * 2;
+	const popUpY = y - KONVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
+
 	return (
 		<>
 			<Circle
@@ -41,7 +57,34 @@ export function UserAvatar({
 				fill={'#550000'}
 				{...props}
 			/>
-			{userPopup}
+			<UserPopUp
+				width={KONVA.size.userPopUp.width}
+				height={KONVA.size.userPopUp.height}
+				x={popUpX}
+				y={popUpY}
+				isVisible={isPopUpVisible}
+				userName={
+					selectedUser && selectedUser?.id === USER_ID_TEMP
+						? 'Вы'
+						: selectedUser?.name
+				}
+				positionInQueue={selectedUser ? selectedUser?.index + 1 : 0}
+				actionButton={
+					<ButtonKanva
+						width={KONVA.size.userPopUp.width}
+						height={KONVA.size.userPopUpButton.height}
+						localGroupX={0}
+						localGroupY={KONVA.size.userPopUp.height}
+						onClick={() => console.log('hello World')}
+						bgColor={COLORS.bg.leave}
+						color={COLORS.text}
+						fontSize={KONVA.font.size / 1.5}
+						cornerRadius={60}
+					>
+						Покинуть очередь
+					</ButtonKanva>
+				}
+			/>
 		</>
 	);
 }

@@ -47,6 +47,7 @@ export function UserLine({
 			points={lastLinePoints.current}
 			strokeWidth={16}
 			stroke={'#ffffff'}
+			listening={false}
 		/>
 	);
 }
