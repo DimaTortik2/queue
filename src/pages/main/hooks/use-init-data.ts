@@ -1,7 +1,6 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import type {
 	ILine,
-	ILineCoords,
 	IUser,
 	IUserDataElement,
 } from '../interfaces';

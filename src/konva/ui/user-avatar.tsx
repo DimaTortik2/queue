@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { forwardRef, memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Circle, Group } from 'react-konva';
 import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';

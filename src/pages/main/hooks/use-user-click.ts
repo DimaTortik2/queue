@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { selectedUserAtom } from '../../../app/strore/atoms';
-import type { ILine, ILineCoords, IUser } from '../interfaces';
+import type { ILine, IUser } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
 import { useCallback, useEffect, useRef } from 'react';
 import { DEVICE, STAGE } from '../../../app/config/consts';
