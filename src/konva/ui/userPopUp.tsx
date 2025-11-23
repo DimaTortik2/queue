@@ -2,19 +2,17 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { Rect, Text, Group } from 'react-konva';
 import type { IReactKonvaUiProps } from '../interfaces/kanva.interface';
 import Konva from 'konva';
-import { COLORS, KONVA } from '../../app/config/consts';
+import { COLORS, KONVA, USER_ID_TEMP } from '../../app/config/consts';
+import { useAtomValue } from 'jotai';
+import { selectedUserAtom } from '../../app/strore/atoms';
 
 interface IProps extends IReactKonvaUiProps {
-	userName?: string;
-	positionInQueue: number;
 	actionButton?: ReactNode;
 	isVisible: boolean;
 }
 
 export function UserPopUp({
 	width,
-	userName,
-	positionInQueue,
 	actionButton,
 	height,
 	x,
@@ -25,6 +23,11 @@ export function UserPopUp({
 	color,
 }: IProps) {
 	if (!isVisible) return;
+
+	const selectedUser = useAtomValue(selectedUserAtom);
+
+	const userName =
+		selectedUser?.id === USER_ID_TEMP ? 'Вы' : selectedUser?.name;
 
 	const UserNameFontSize = KONVA.font.size * 2;
 	const placeFontSize = KONVA.font.size / 1.3;
@@ -43,11 +46,11 @@ export function UserPopUp({
 
 		const tween = new Konva.Tween({
 			node: popUp,
-			duration: 0.3, // Быстрее = плавнее для глаза
+			duration: 0.3,
 			opacity: 1,
 			scaleX: 1,
 			scaleY: 1,
-			easing: Konva.Easings.EaseInOut, // Приятный отскок
+			easing: Konva.Easings.EaseInOut,
 		});
 		tween.play();
 	}, [isVisible]);
@@ -77,7 +80,7 @@ export function UserPopUp({
 			/>
 			<Text
 				padding={5}
-				text={String(positionInQueue)}
+				text={String(selectedUser ? selectedUser?.index + 1 : 0)}
 				x={paddingLeft ? paddingLeft : 320}
 				y={positionY}
 				fontSize={positionFontSize}

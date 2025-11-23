@@ -8,23 +8,23 @@ import { selectedUserAtom } from '../../../app/strore/atoms';
 import { useAtomValue } from 'jotai';
 import { UserLine } from '../../../konva/ui/user-line';
 import { UserAvatar } from '../../../konva/ui/user-avatar';
-import { useRef } from 'react';
-import type Konva from 'konva';
+import { useInitializeRefs } from '../hooks/use-init-refs';
 
 export function MainPage() {
 	const selectedUser = useAtomValue(selectedUserAtom);
-	const stageRef = useRef<Konva.Stage | null>(null);
 
-	const { initialUsers, initialLines, users, lines, setUsers } =
-		useInitializeData();
+	const { initialUsers, initialLines } = useInitializeData();
+
+	const { stageRef, avatarsRef, linesRef, setAvatarsRefs, setLinesRefs } =
+		useInitializeRefs();
 
 	const { handleAvatarClick, handleStageClick } = useUserClick({
 		initialUsers,
-		users,
-		setUsers,
+		initialLines,
 		stageRef,
+		avatarsRef,
+		linesRef,
 	});
-	
 
 	return (
 		<Layout>
@@ -45,39 +45,36 @@ export function MainPage() {
 				})}
 			>
 				<Layer>
-					{lines.map((line, i) => {
+					{initialLines.map(line => {
 						return (
 							<UserLine
-								initialX1={initialLines[i].x1}
-								initialY1={initialLines[i].y1}
-								initialX2={initialLines[i].x2}
-								initialY2={initialLines[i].y2}
-								x1={line.x1}
-								y1={line.y1}
-								x2={line.x2}
-								y2={line.y2}
+								initialX1={line.x1}
+								initialY1={line.y1}
+								initialX2={line.x2}
+								initialY2={line.y2}
+								onRegister={setLinesRefs}
+								lineId={line.id}
 								key={line.id}
 							/>
 						);
 					})}
-					{users.map((user, i) => {
+					{initialUsers.map((user, i) => {
 						return (
 							<UserAvatar
+								onRegister={setAvatarsRefs}
 								initialX={initialUsers[i].x}
 								initialY={initialUsers[i].y}
 								x={user.x}
 								y={user.y}
 								radius={AVATAR.radius}
 								fill={'#550000'}
-								onPointerClick={() => {
-									handleAvatarClick({
-										selectedUserId: user.id,
-										selectedUserIndex: i,
-									});
-								}}
+								onAvatarClick={handleAvatarClick}
+								selectedUserId={user.id}
+								selectedUserIndex={i}
 								isLeft={i % 2 === 0}
 								isPopUpVisible={i === selectedUser?.index}
-								selectedUser={selectedUser}
+								userId={user.id}
+								isSelected={selectedUser ? user.id === selectedUser.id : false}
 								key={user.id}
 							/>
 						);

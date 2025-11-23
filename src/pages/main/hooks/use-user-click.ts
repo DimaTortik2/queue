@@ -1,58 +1,125 @@
 import { useAtom } from 'jotai';
 import { selectedUserAtom } from '../../../app/strore/atoms';
-import type { IUser } from '../interfaces';
+import type { ILine, ILineCoords, IUser } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { DEVICE, STAGE } from '../../../app/config/consts';
 import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
 import { setStageSmooth } from '../../../konva/lib/set-stage-smooth';
 import { getTransformStateYToCenterSelectedUser } from '../../../konva/lib/helpers/get-transform-state-y-to-center-selected-user';
 import { getTransformStateXToCenterSelectedUser } from '../../../konva/lib/helpers/get-transform-state-x-to-center-selected-user';
 import { getStageXToCenterQueue } from '../../../konva/lib/helpers/get-stage-x-to-center-queue';
+import Konva from 'konva';
 
 interface IProps {
 	initialUsers: IUser[];
-	users: IUser[];
+	initialLines: ILine[];
 	stageRef: React.RefObject<Stage | null>;
-	setUsers: React.Dispatch<React.SetStateAction<IUser[]>>;
+	avatarsRef: React.MutableRefObject<Record<IUser['id'], Konva.Group>>;
+	linesRef: React.MutableRefObject<Record<ILine['id'], Konva.Line>>;
+
 }
 
 export function useUserClick({
 	initialUsers,
-	users,
-	setUsers,
+	initialLines,
 	stageRef,
+	avatarsRef,
+	linesRef,
 }: IProps) {
 	const [selectedUser, setSelectedUser] = useAtom(selectedUserAtom);
 
-	const shiftOtherUsers = ({
-		selectedUserId,
-		selectedUserIndex,
-	}: {
-		selectedUserId: IUser['id'];
-		selectedUserIndex: number;
-	}) => {
-		const shiftY = window.innerHeight / 2;
+	// Чисто для хака с useCallback
+	const stateRef = useRef({
+		selectedUser,
+		initialUsers,
+		avatarsRef,
+		linesRef,
+	});
 
-		const newUsers = users.map((user, i) => {
-			if (selectedUserId !== user.id) {
-				// to above users
-				if (i < selectedUserIndex) {
-					return { ...user, y: user.y - shiftY };
-				}
-				// to below users
-				else if (i > selectedUserIndex) {
-					return { ...user, y: user.y + shiftY };
-				}
-			}
-			return user;
-		});
+	// Обновляем stateRef при каждом рендере
+	// Чисто для хака с useCallback
+	useEffect(() => {
+		stateRef.current = {
+			selectedUser,
+			initialUsers,
+			avatarsRef,
+			linesRef,
+		};
+	});
 
-		setUsers(newUsers);
-	};
+	const shiftUsers = useCallback(
+		({
+			selectedUserId,
+			selectedUserIndex,
+		}: {
+			selectedUserId: IUser['id'];
+			selectedUserIndex: number;
+		}) => {
+			const { initialUsers, avatarsRef, linesRef } =
+				stateRef.current;
+
+			const shiftY = window.innerHeight / 2;
+
+			initialUsers.forEach((u, i) => {
+				const avatarNode: Konva.Group = avatarsRef.current[u.id];
+
+				if (!avatarNode) return;
+
+				let targetY = u.y;
+
+				if (u.id === selectedUserId) {
+					targetY = u.y;
+				} else if (i < selectedUserIndex) {
+					//Вверх
+					targetY = u.y - shiftY;
+				} else if (i > selectedUserIndex) {
+					//Вниз
+					targetY = u.y + shiftY;
+				}
+
+				avatarNode.to({
+					y: targetY,
+					duration: 0.3,
+					easing: Konva.Easings.EaseInOut,
+				});
+			});
+
+			initialLines.forEach((l, i) => {
+				const lineNode: Konva.Line = linesRef.current[l.id];
+				let targetPoints = [l.x1, l.y1, l.x2, l.y2];
+
+				// у линнии индекс совпадает с индексом пользователя с верхнего её конца, так что:
+
+				if (i === selectedUserIndex) {
+					// линия ПОД выделенным пользователем
+					targetPoints = [l.x1, l.y1, l.x2, l.y2 + shiftY];
+				} else if (i === selectedUserIndex - 1) {
+					// линия НАД выделенным пользователем
+					targetPoints = [l.x1, l.y1 - shiftY, l.x2, l.y2];
+				} else if (i > selectedUserIndex) {
+					// линии ПОД линией ПОД выделенным пользователем
+					targetPoints = [l.x1, l.y1 + shiftY, l.x2, l.y2 + shiftY];
+				} else if (i < selectedUserIndex - 1) {
+					// линии НАД линией НАД выделенным пользователем
+					targetPoints = [l.x1, l.y1 - shiftY, l.x2, l.y2 - shiftY];
+				}
+
+				lineNode.to({
+					duration: 0.3,
+					points: targetPoints,
+					easing: Konva.Easings.EaseInOut,
+				});
+			});
+		},
+		[]
+	);
 
 	const resetAvatarClick = useCallback(() => {
-		// если пользователь не выделен, то нечего и ресетать
+		const { selectedUser, initialUsers, avatarsRef } =
+			stateRef.current;
+
+		// если пользователь не выделен, то нечего и ресчетать
 		if (!stageRef.current || selectedUser === null) return;
 
 		// на телефоне более свободное поведение (только центровка)
@@ -69,9 +136,30 @@ export function useUserClick({
 			setStageSmooth({ newStage: { x, y, scale }, stageRef });
 		}
 
-		setUsers(initialUsers);
+		initialUsers.forEach(u => {
+			const avatarNode: Konva.Group = avatarsRef.current[u.id];
+			if (!avatarNode) return;
+
+			avatarNode.to({
+				y: u.y,
+				duration: 0.3,
+				easing: Konva.Easings.EaseInOut,
+			});
+		});
+
+		initialLines.forEach(l => {
+			const lineNode: Konva.Line = linesRef.current[l.id];
+			let targetPoints = [l.x1, l.y1, l.x2, l.y2];
+
+			lineNode.to({
+				duration: 0.3,
+				points: targetPoints,
+				easing: Konva.Easings.EaseInOut,
+			});
+		});
+
 		setSelectedUser(null);
-	}, [selectedUser, setStageSmooth, setSelectedUser, stageRef]);
+	}, []);
 
 	const handleAvatarClick = useCallback(
 		({
@@ -82,14 +170,15 @@ export function useUserClick({
 			selectedUserIndex: number;
 		}) => {
 			if (!stageRef.current) return;
-			// ресетать , если кликнули повторно
+			const { selectedUser, initialUsers } = stateRef.current;
 
+			// ресетать , если кликнули повторно
 			if (selectedUser !== null) {
 				resetAvatarClick();
 			}
 
 			if (selectedUser === null) {
-				const selectedUser = users[selectedUserIndex];
+				const selectedUser = initialUsers[selectedUserIndex];
 
 				setSelectedUser({ ...selectedUser, index: selectedUserIndex });
 
@@ -98,25 +187,16 @@ export function useUserClick({
 					: DEVICE.pc.selectedScale;
 				const x = getTransformStateXToCenterSelectedUser(
 					scale,
-					users,
 					selectedUserIndex
 				);
 				const y = getTransformStateYToCenterSelectedUser(scale, selectedUser.y);
 				setStageSmooth({ newStage: { x, y, scale }, stageRef });
 
 				// shift others
-				shiftOtherUsers({ selectedUserId, selectedUserIndex });
+				shiftUsers({ selectedUserId, selectedUserIndex });
 			}
 		},
-		[
-			resetAvatarClick,
-			selectedUser,
-			users,
-			setSelectedUser,
-			setStageSmooth,
-			shiftOtherUsers,
-			stageRef,
-		]
+		[resetAvatarClick, setSelectedUser, setStageSmooth, shiftUsers, stageRef]
 	);
 
 	const clickTimeout = useRef<NodeJS.Timeout | null>(null);

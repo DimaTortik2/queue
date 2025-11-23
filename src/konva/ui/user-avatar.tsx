@@ -1,90 +1,100 @@
 import Konva from 'konva';
-import { useEffect, useRef } from 'react';
-import { Circle } from 'react-konva';
-import { AVATAR, COLORS, KONVA, USER_ID_TEMP } from '../../app/config/consts';
+import { forwardRef, memo, useEffect, useRef } from 'react';
+import { Circle, Group } from 'react-konva';
+import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';
-import type { ISelectedUser } from '../../pages/main/interfaces';
 import { ButtonKanva } from './button-kanva';
+import type { IUser } from '../../pages/main/interfaces';
 
 interface IProps extends Konva.NodeConfig {
 	initialX: number;
 	initialY: number;
 	isLeft: boolean;
-	isPopUpVisible: boolean;
-	selectedUser: ISelectedUser | null;
+	isSelected: boolean;
+	onRegister: (node: Konva.Group | null, userId: IUser['id']) => void;
+	onAvatarClick: ({
+		selectedUserId,
+		selectedUserIndex,
+	}: {
+		selectedUserId: number;
+		selectedUserIndex: number;
+	}) => void;
+
+	selectedUserId: IUser['id'];
+	selectedUserIndex: number;
+	userId: IUser['id'];
 }
 
-export function UserAvatar({
-	x,
-	y,
-	initialX,
-	initialY,
-	selectedUser,
-	isLeft,
-	isPopUpVisible,
-	...props
-}: IProps) {
-	if (x === undefined || y === undefined) return;
+export const UserAvatar = memo(
+	({
+		x,
+		y,
+		initialX,
+		initialY,
+		isSelected,
+		isLeft,
+		onAvatarClick,
+		selectedUserId,
+		selectedUserIndex,
+		onRegister,
+		userId,
+		...props
+	}: IProps) => {
+		if (x === undefined || y === undefined) return null;
 
-	console.log('rerender Avatar');
+		const popUpX = isLeft
+			? AVATAR.radius * 2
+			: -KONVA.size.userPopUp.width - AVATAR.radius * 2;
+		const popUpY = -KONVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
 
-	const circleRef = useRef<Konva.Circle>(null);
+		const handleAvatarClick = () => {
+			onAvatarClick({ selectedUserId, selectedUserIndex });
+		};
 
-	useEffect(() => {
-		const circle = circleRef.current;
+		const avatarRef = useRef<Konva.Group>(null);
 
-		if (!circle) return;
-		circle.to({
-			duration: 0.5,
-			x: x,
-			y: y,
-			easing: Konva.Easings.EaseInOut,
-		});
-	}, [x, y]);
+		useEffect(() => {
+			if (avatarRef.current) {
+				onRegister(avatarRef.current, userId);
+			}
+			return () => {
+				onRegister(null, userId);
+			};
+		}, [userId, onRegister]);
 
-	const popUpX = isLeft
-		? x + AVATAR.radius * 2
-		: x - KONVA.size.userPopUp.width - AVATAR.radius * 2;
-	const popUpY = y - KONVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
-
-	return (
-		<>
-			<Circle
-				ref={circleRef}
-				x={initialX}
-				y={initialY}
-				radius={AVATAR.radius}
-				fill={'#550000'}
-				{...props}
-			/>
-			<UserPopUp
-				width={KONVA.size.userPopUp.width}
-				height={KONVA.size.userPopUp.height}
-				x={popUpX}
-				y={popUpY}
-				isVisible={isPopUpVisible}
-				userName={
-					selectedUser && selectedUser?.id === USER_ID_TEMP
-						? 'Вы'
-						: selectedUser?.name
-				}
-				positionInQueue={selectedUser ? selectedUser?.index + 1 : 0}
-				actionButton={
-					<ButtonKanva
-						width={KONVA.size.userPopUp.width}
-						height={KONVA.size.userPopUpButton.height}
-						localGroupX={0}
-						localGroupY={KONVA.size.userPopUp.height}
-						onClick={() => console.log('hello World')}
-						bgColor={COLORS.bg.leave}
-						color={COLORS.text}
-						fontSize={KONVA.font.size / 1.5}
-						cornerRadius={60}
-					>
-						Покинуть очередь
-					</ButtonKanva>
-				}
-			/>
-		</>
-	);
-}
+		return (
+			<Group x={initialX} y={initialY} ref={avatarRef}>
+				<Circle
+					x={0}
+					y={0}
+					radius={AVATAR.radius}
+					fill={'#550000'}
+					onPointerClick={handleAvatarClick}
+					{...props}
+				/>
+				<UserPopUp
+					width={KONVA.size.userPopUp.width}
+					height={KONVA.size.userPopUp.height}
+					x={popUpX}
+					y={popUpY}
+					isVisible={isSelected}
+					actionButton={
+						<ButtonKanva
+							width={KONVA.size.userPopUp.width}
+							height={KONVA.size.userPopUpButton.height}
+							localGroupX={0}
+							localGroupY={KONVA.size.userPopUp.height}
+							onClick={() => console.log('hello World')}
+							bgColor={COLORS.bg.leave}
+							color={COLORS.text}
+							fontSize={KONVA.font.size / 1.5}
+							cornerRadius={60}
+						>
+							Покинуть очередь
+						</ButtonKanva>
+					}
+				/>
+			</Group>
+		);
+	}
+);
