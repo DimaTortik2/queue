@@ -1,97 +1,86 @@
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { Layout } from './layout';
-import { useBuisness } from '../hooks/use-buisness';
+import { useInitializeData } from '../hooks/use-init-data';
 import { useUserClick } from '../hooks/use-user-click';
-import { Avatar } from './avatar';
-import { Line } from './line';
+import { Layer, Stage } from 'react-konva';
+import { getInteractivePropsForStage } from '../../../konva/lib/get-interactive-props-for-stage';
+import { AVATAR, STAGE } from '../../../app/config/consts';
+import { selectedUserAtom } from '../../../app/strore/atoms';
+import { useAtomValue } from 'jotai';
+import { UserLine } from '../../../konva/ui/user-line';
+import { UserAvatar } from '../../../konva/ui/user-avatar';
+import { useInitializeRefs } from '../hooks/use-init-refs';
 
 export function MainPage() {
-	const {
-		canvaHeight,
-		canvaWidth,
-		users,
+	const selectedUser = useAtomValue(selectedUserAtom);
+
+	const { initialUsers, initialLines } = useInitializeData();
+
+	const { stageRef, avatarsRef, linesRef, setAvatarsRefs, setLinesRefs } =
+		useInitializeRefs();
+
+	const { handleAvatarClick, handleStageClick } = useUserClick({
+		initialUsers,
 		initialLines,
-		lines,
-		shiftOtherUsers,
-		resetUserData,
-		initailWrapperX,
-		initionalTransformState,
-	} = useBuisness();
-	const { canvasRef, handleUserClick, resetUserClick } = useUserClick({
-		users,
-		shiftOtherUsers,
-		resetUserData,
-		initailWrapperX,
-		initionalTransformState,
+		stageRef,
+		avatarsRef,
+		linesRef,
 	});
 
 	return (
 		<Layout>
-			<TransformWrapper
-				ref={canvasRef}
-				limitToBounds={false}
-				minScale={0.04}
-				maxScale={1.5}
-				initialPositionX={initionalTransformState.x}
-				initialPositionY={initionalTransformState.y}
-				initialScale={initionalTransformState.scale}
-				doubleClick={{ disabled: true }}
-				wheel={{ step: 1 }}
-				smooth
-			
+			<Stage
+				ref={stageRef}
+				width={window.innerWidth}
+				height={window.innerHeight}
+				scaleX={STAGE.initial.scale}
+				scaleY={STAGE.initial.scale}
+				x={STAGE.initial.x}
+				y={STAGE.initial.y}
+				draggable
+				onPointerClick={handleStageClick}
+				{...getInteractivePropsForStage({
+					stageRef,
+					maxScale: STAGE.maxScale,
+					minScale: STAGE.minScale,
+				})}
 			>
-				<TransformComponent
-					contentStyle={{ height: canvaHeight, width: canvaWidth }}
-					contentClass='bg-[#ffffff] relative'
-					contentProps={{ onClick: resetUserClick }}
-				>
-					<svg
-						viewBox={`0 0 ${canvaWidth} ${canvaHeight}`}
-						className='w-full h-full'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						{lines.map((line, i) => {
-							return (
-								<Line
-									initX1={initialLines[i].x1}
-									initY1={initialLines[i].y1}
-									initX2={initialLines[i].x2}
-									initY2={initialLines[i].y2}
-									x1={line.x1}
-									y1={line.y1}
-									x2={line.x2}
-									y2={line.y2}
-									stroke='black'
-									strokeWidth={10}
-									key={line.id}
-									className={String(line.id)}
-								/>
-							);
-						})}
-					</svg>
-					{users.map((user, i) => {
+				<Layer>
+					{initialLines.map(line => {
 						return (
-							<Avatar
-								style={{
-									left: user.left,
-									top: user.top,
-									transform: `translateY(${user.translateY}px)`,
-								}}
-								onClick={() =>
-									handleUserClick({
-										selectedUserId: user.id,
-										selectedUserIndex: i,
-									})
-								}
-								key={user.id}
-								src={user.avaSrc}
-								alt='avatar'
-								className='transition-transform duration-1000'
+							<UserLine
+								initialX1={line.x1}
+								initialY1={line.y1}
+								initialX2={line.x2}
+								initialY2={line.y2}
+								onRegister={setLinesRefs}
+								lineId={line.id}
+								key={line.id}
 							/>
 						);
 					})}
-				</TransformComponent>
-			</TransformWrapper>
+					{initialUsers.map((user, i) => {
+						return (
+							<UserAvatar
+								onRegister={setAvatarsRefs}
+								initialX={initialUsers[i].x}
+								initialY={initialUsers[i].y}
+								x={user.x}
+								y={user.y}
+								radius={AVATAR.radius}
+								fill={'#550000'}
+								onAvatarClick={handleAvatarClick}
+								selectedUserId={user.id}
+								selectedUserIndex={i}
+								isLeft={i % 2 === 0}
+								isPopUpVisible={i === selectedUser?.index}
+								userId={user.id}
+								isSelected={selectedUser ? user.id === selectedUser.id : false}
+								key={user.id}
+							/>
+						);
+					})}
+				</Layer>
+			</Stage>
 		</Layout>
 	);
 }
