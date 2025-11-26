@@ -3,7 +3,7 @@ import { selectedUserAtom } from '../../../app/strore/atoms';
 import type { ILine, IUser } from '../interfaces';
 import type { Stage } from 'konva/lib/Stage';
 import { useCallback, useEffect, useRef } from 'react';
-import { DEVICE, STAGE } from '../../../app/config/consts';
+import { AVATAR, DEVICE, STAGE } from '../../../app/config/consts';
 import type { KonvaEventObject, NodeConfig, Node } from 'konva/lib/Node';
 import { setStageSmooth } from '../../../konva/lib/set-stage-smooth';
 import { getTransformStateYToCenterSelectedUser } from '../../../konva/lib/helpers/get-transform-state-y-to-center-selected-user';
@@ -17,7 +17,6 @@ interface IProps {
 	stageRef: React.RefObject<Stage | null>;
 	avatarsRef: React.MutableRefObject<Record<IUser['id'], Konva.Group>>;
 	linesRef: React.MutableRefObject<Record<ILine['id'], Konva.Line>>;
-
 }
 
 export function useUserClick({
@@ -56,8 +55,7 @@ export function useUserClick({
 			selectedUserId: IUser['id'];
 			selectedUserIndex: number;
 		}) => {
-			const { initialUsers, avatarsRef, linesRef } =
-				stateRef.current;
+			const { initialUsers, avatarsRef, linesRef } = stateRef.current;
 
 			const shiftY = window.innerHeight / 2;
 
@@ -116,8 +114,7 @@ export function useUserClick({
 	);
 
 	const resetAvatarClick = useCallback(() => {
-		const { selectedUser, initialUsers, avatarsRef } =
-			stateRef.current;
+		const { selectedUser, initialUsers, avatarsRef } = stateRef.current;
 
 		// если пользователь не выделен, то нечего и ресчетать
 		if (!stageRef.current || selectedUser === null) return;
@@ -182,9 +179,8 @@ export function useUserClick({
 
 				setSelectedUser({ ...selectedUser, index: selectedUserIndex });
 
-				const scale = DEVICE.isMobile
-					? DEVICE.mobile.selectedScale
-					: DEVICE.pc.selectedScale;
+				const scale = AVATAR.select.scale;
+
 				const x = getTransformStateXToCenterSelectedUser(
 					scale,
 					selectedUserIndex
@@ -213,9 +209,9 @@ export function useUserClick({
 
 			setStageSmooth({
 				newStage: {
-					x: getStageXToCenterQueue(0.1),
+					x: getStageXToCenterQueue(STAGE.initial.scale),
 					y: STAGE.initial.y,
-					scale: 0.1,
+					scale: STAGE.initial.scale,
 				},
 				stageRef,
 			});

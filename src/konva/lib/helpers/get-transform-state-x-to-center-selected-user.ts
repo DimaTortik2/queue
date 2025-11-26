@@ -1,4 +1,4 @@
-import { AVATAR, DEVICE } from '../../../app/config/consts';
+import { AVATAR } from '../../../app/config/consts';
 
 export const getTransformStateXToCenterSelectedUser = (
 	scale: number,
@@ -6,9 +6,7 @@ export const getTransformStateXToCenterSelectedUser = (
 ) => {
 	const isLeft = selectedUserIndex % 2 === 0;
 
-	const avatarMarginX = DEVICE.isMobile
-		? DEVICE.mobile.selectedMargin.x
-		: DEVICE.pc.selectedMargin.x;
+	const avatarMarginX = AVATAR.select.margin.x;
 
 	const shiftToLeftX = isLeft
 		? scale * AVATAR.initial.x - avatarMarginX - (AVATAR.radius / 2) * scale
