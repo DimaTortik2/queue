@@ -146,7 +146,7 @@ export const KONVA = {
 	font: {
 		size: 120,
 	},
-	size: {
+	minSize: {
 		userPopUp: {
 			width: 900,
 			height: 430,
@@ -156,3 +156,11 @@ export const KONVA = {
 		},
 	},
 };
+
+
+export const MAX =  {
+	userName : {
+		first : 7,
+		second : 9,	
+	}
+}

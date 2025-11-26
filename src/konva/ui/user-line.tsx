@@ -23,6 +23,7 @@ export const UserLine = memo(
 	}: IProps) => {
 		const lineRef = useRef<Konva.Line>(null);
 
+
 		useEffect(() => {
 			if (lineRef.current) {
 				onRegister(lineRef.current, lineId);

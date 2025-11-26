@@ -1,9 +1,5 @@
 import { useMemo } from 'react';
-import type {
-	ILine,
-	IUser,
-	IUserDataElement,
-} from '../interfaces';
+import type { ILine, IUser, IUserDataElement } from '../interfaces';
 import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
 
 export function useInitializeData() {
@@ -13,7 +9,7 @@ export function useInitializeData() {
 		for (let i = 0; i < USERS_COUNT_TEMP; i++) {
 			userData.push({
 				avaSrc: '/ava.png',
-				name: 'Дима',
+				name: 'Юлька Любимая емае устал',
 				id: i,
 			});
 		}

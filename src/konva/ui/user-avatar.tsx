@@ -1,16 +1,15 @@
 import Konva from 'konva';
 import { memo, useEffect, useRef } from 'react';
 import { Circle, Group } from 'react-konva';
-import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
+import { AVATAR } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';
-import { ButtonKanva } from './button-kanva';
 import type { IUser } from '../../pages/main/interfaces';
 
 interface IProps extends Konva.NodeConfig {
-	initialX: number;
-	initialY: number;
 	isLeft: boolean;
 	isSelected: boolean;
+	userIndex: number;
+	userId: IUser['id'];
 	onRegister: (node: Konva.Group | null, userId: IUser['id']) => void;
 	onAvatarClick: ({
 		selectedUserId,
@@ -19,36 +18,27 @@ interface IProps extends Konva.NodeConfig {
 		selectedUserId: number;
 		selectedUserIndex: number;
 	}) => void;
-
-	selectedUserId: IUser['id'];
-	selectedUserIndex: number;
-	userId: IUser['id'];
 }
 
 export const UserAvatar = memo(
 	({
 		x,
 		y,
-		initialX,
-		initialY,
 		isSelected,
 		isLeft,
 		onAvatarClick,
-		selectedUserId,
-		selectedUserIndex,
 		onRegister,
 		userId,
+		userIndex,
 		...props
 	}: IProps) => {
 		if (x === undefined || y === undefined) return null;
 
-		const popUpX = isLeft
-			? AVATAR.radius * 2
-			: -KONVA.size.userPopUp.width - AVATAR.radius * 2;
-		const popUpY = -KONVA.size.userPopUp.height / 3 - AVATAR.radius / 2;
+		const popUpX = isLeft ? AVATAR.radius * 2 : -AVATAR.radius * 1.5;
+		const popUpY = 0;
 
 		const handleAvatarClick = () => {
-			onAvatarClick({ selectedUserId, selectedUserIndex });
+			onAvatarClick({ selectedUserId: userId, selectedUserIndex: userIndex });
 		};
 
 		const avatarRef = useRef<Konva.Group>(null);
@@ -63,7 +53,7 @@ export const UserAvatar = memo(
 		}, [userId, onRegister]);
 
 		return (
-			<Group x={initialX} y={initialY} ref={avatarRef}>
+			<Group x={x} y={y} ref={avatarRef}>
 				<Circle
 					x={0}
 					y={0}
@@ -73,26 +63,10 @@ export const UserAvatar = memo(
 					{...props}
 				/>
 				<UserPopUp
-					width={KONVA.size.userPopUp.width}
-					height={KONVA.size.userPopUp.height}
+					isLeft={isLeft}
 					x={popUpX}
 					y={popUpY}
 					isVisible={isSelected}
-					actionButton={
-						<ButtonKanva
-							width={KONVA.size.userPopUp.width}
-							height={KONVA.size.userPopUpButton.height}
-							localGroupX={0}
-							localGroupY={KONVA.size.userPopUp.height}
-							onClick={() => console.log('hello World')}
-							bgColor={COLORS.bg.leave}
-							color={COLORS.text}
-							fontSize={KONVA.font.size / 1.5}
-							cornerRadius={60}
-						>
-							Покинуть очередь
-						</ButtonKanva>
-					}
 				/>
 			</Group>
 		);

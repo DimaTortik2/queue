@@ -26,6 +26,7 @@ export function MainPage() {
 		linesRef,
 	});
 
+
 	return (
 		<Layout>
 			<Stage
@@ -62,18 +63,13 @@ export function MainPage() {
 						return (
 							<UserAvatar
 								onRegister={setAvatarsRefs}
-								initialX={initialUsers[i].x}
-								initialY={initialUsers[i].y}
+								onAvatarClick={handleAvatarClick}
 								x={user.x}
 								y={user.y}
 								radius={AVATAR.radius}
-								fill={'#550000'}
-								onAvatarClick={handleAvatarClick}
-								selectedUserId={user.id}
-								selectedUserIndex={i}
-								isLeft={i % 2 === 0}
-								isPopUpVisible={i === selectedUser?.index}
 								userId={user.id}
+								userIndex={i}
+								isLeft={i % 2 === 0}
 								isSelected={selectedUser ? user.id === selectedUser.id : false}
 								key={user.id}
 							/>

@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import { Rect, Text, Group } from 'react-konva';
-import type { IReactKonvaUiProps } from '../interfaces/kanva.interface';
+import { Text, Label, Tag } from 'react-konva';
+import type { KonvaProps } from '../interfaces/kanva.interface';
 import { COLORS, KONVA } from '../../app/config/consts';
 
-interface IProps extends IReactKonvaUiProps {
+interface IProps extends KonvaProps {
 	children?: ReactNode;
 	onClick: () => void;
 	fontSize?: number;
@@ -14,46 +14,25 @@ export function ButtonKanva({
 	children,
 	onClick,
 	color,
-	width,
-	height,
-	paddingLeft,
-	paddingTop,
-	x,
-	y,
-	localGroupX,
-	localGroupY,
+	padding,
 	bgColor,
 	fontSize,
 	cornerRadius,
+	...props
 }: IProps) {
 	return (
-		<Group
-			x={x ? x : localGroupX}
-			y={y ? y : localGroupY}
-			onClick={onClick}
-			onTap={onClick}
-		>
-			<Rect
-				x={0}
-				y={0}
-				width={width}
-				height={height}
-				fill={bgColor}
-				cornerRadius={cornerRadius ? cornerRadius : 0}
-			/>
+		<Label {...props} onClick={onClick} onTap={onClick}>
+			<Tag fill={bgColor} cornerRadius={cornerRadius ? cornerRadius : 0} />
 			<Text
-				text={children ? String(children) : undefined}
-				x={paddingLeft ? paddingLeft : 0}
-				y={paddingTop ? paddingTop : 0}
+				text={children ? String(children) : ''}
+				padding={padding || 5}
 				fontSize={fontSize ? fontSize : KONVA.font.size}
 				fill={color ? color : COLORS.text}
-				width={width}
-				height={height}
 				align='center'
 				verticalAlign='middle'
 				fontStyle='normal'
 				listening={false}
 			/>
-		</Group>
+		</Label>
 	);
 }
