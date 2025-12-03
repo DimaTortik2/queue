@@ -2,6 +2,7 @@ import Konva from 'konva';
 import { memo, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
 import type { ILine } from '../../pages/main/interfaces';
+import { COLORS } from '../../app/config/consts';
 
 interface IProps {
 	initialX1: number;
@@ -38,7 +39,7 @@ export const UserLine = memo(
 				ref={lineRef}
 				points={[initialX1, initialY1, initialX2, initialY2]}
 				strokeWidth={16}
-				stroke={'#ffffff'}
+				stroke={COLORS.line}
 				listening={false}
 			/>
 		);

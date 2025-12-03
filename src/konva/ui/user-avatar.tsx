@@ -1,9 +1,11 @@
 import Konva from 'konva';
 import { memo, useEffect, useRef } from 'react';
-import { Circle, Group } from 'react-konva';
-import { AVATAR } from '../../app/config/consts';
+import { Circle, Group, Image } from 'react-konva';
+import { AVATAR, COLORS } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';
 import type { IUser } from '../../pages/main/interfaces';
+import useImage from 'use-image';
+import myAvatar from '../../assets/ava.png?format=webp&quality=80';
 
 interface IProps extends Konva.NodeConfig {
 	isLeft: boolean;
@@ -42,7 +44,6 @@ export const UserAvatar = memo(
 		};
 
 		const avatarRef = useRef<Konva.Group>(null);
-
 		useEffect(() => {
 			if (avatarRef.current) {
 				onRegister(avatarRef.current, userId);
@@ -52,16 +53,35 @@ export const UserAvatar = memo(
 			};
 		}, [userId, onRegister]);
 
+		const [image] = useImage(myAvatar, 'anonymous');
+
 		return (
 			<Group x={x} y={y} ref={avatarRef}>
-				<Circle
-					x={0}
-					y={0}
-					radius={AVATAR.radius}
-					fill={'#550000'}
-					onPointerClick={handleAvatarClick}
-					{...props}
-				/>
+				<Group
+					clipFunc={ctx => {
+						// Делает клиппинг в виде круга
+						ctx.arc(0, 0, AVATAR.radius, 0, Math.PI * 2, false);
+					}}
+				>
+					<Image
+						image={image}
+						width={AVATAR.radius * 2}
+						height={AVATAR.radius * 2}
+						x={-AVATAR.radius}
+						y={-AVATAR.radius}
+						onPointerClick={handleAvatarClick}
+						{...props}
+					/>
+
+					<Circle
+						x={0}
+						y={0}
+						radius={AVATAR.radius}
+						stroke={COLORS.avatar.border.normal}
+						strokeWidth={AVATAR.border.width}
+						listening={false}
+					/>
+				</Group>
 				<UserPopUp
 					isLeft={isLeft}
 					x={popUpX}

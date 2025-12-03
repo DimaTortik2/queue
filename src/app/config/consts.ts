@@ -101,6 +101,9 @@ export const AVATAR = (() => {
 
 	return {
 		radius,
+		border :{
+			width : 17
+		},
 		initial: {
 			x: 0,
 			y: 0,
@@ -140,6 +143,12 @@ export const COLORS = {
 	bg: {
 		leave: '#A64F4F',
 	},
+	avatar: {
+		border: {
+			normal: '#ffffff24',
+		},
+	},
+	line: '#ffffff06',
 };
 
 export const KONVA = {
@@ -157,10 +166,9 @@ export const KONVA = {
 	},
 };
 
-
-export const MAX =  {
-	userName : {
-		first : 7,
-		second : 9,	
-	}
-}
+export const MAX = {
+	userName: {
+		first: 7,
+		second: 9,
+	},
+};

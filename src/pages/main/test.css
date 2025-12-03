@@ -1,0 +1,164 @@
+/* .loader {
+	animation-name: loader-anim;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+@keyframes loader-anim {
+	0% {
+		transform: rotateX(0deg) rotateY(0deg);
+	}
+	100% {
+		transform: rotateX(360deg) rotateY(0deg);
+	}
+} */
+
+/* 1. Создаем сцену для 3D */
+.perspective-container {
+	/* Чем меньше число, тем сильнее искажение (рыбий глаз). 800-1000px — стандарт */
+	perspective: 800px;
+}
+
+/* 2. Настраиваем сам элемент */
+.circle-loader {
+	/* Важно: крутим относительно центра */
+	transform-origin: center;
+	/* Подключаем анимацию: имя | время | кривая | повтор */
+	animation: rotate-coin 4s linear infinite;
+	/* Оптимизация для браузера */
+	will-change: transform;
+}
+
+/* 3. Описываем кадры */
+@keyframes rotate-coin {
+	0% {
+		/* rotateX(0deg) - смотрим в лицо */
+		transform: rotateX(0deg) rotateY(0deg);
+	}
+	45% {
+		/* rotateX(0deg) - смотрим в лицо */
+		transform: rotateX(70deg) rotateY(50deg);
+	}
+	50%,
+	52% {
+		/* rotateX(0deg) - смотрим в лицо */
+		transform: rotateX(75deg) rotateY(55deg);
+	}
+
+	100% {
+		/* rotateX(360deg) - полный оборот через голову */
+		transform: rotateX(0deg) rotateY(0deg);
+	}
+}
+
+/* <div className='w-screen h-screen bg-[#212121] flex justify-center items-center perspective-container'>
+			<div className='flex flex-col justify-center items-center'>
+				<svg
+					viewBox='0 0 200 200'
+					className='w-[calc((1vh+1vw)*15)] h-[calc((1vh+1vw)*15)] text-blue-400'
+					stroke='currentColor'
+				>
+					<circle
+						cx='100'
+						cy='100'
+						r='80'
+						fill='none'
+						strokeWidth='4'
+						className='circle-loader'
+					/>
+				</svg>
+				<p className='text-center text-[#ffffff25] font-semibold text-xl'>
+					Всё настраиваем...
+				</p>
+			</div>
+		</div> */
+
+.full-page-wrapper {
+	width: 100dvw;
+	height: 100dvh;
+	background-color: #212121;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.loader-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.loader-container svg {
+	width: calc((1vh+1vw) * 15);
+	height: calc((1vh+1vw) * 15);
+	color: #474fc1;
+}
+
+.loader-label {
+	text-align: center;
+	color: #ffffff25;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 1.4;
+}
+
+/* .gooey-container { */
+/* display: flex; */
+/* justify-content: center; */
+/* align-items: center; */
+/* height: 100vh; */
+/* background: #212121; */
+/* На темном фоне выглядит сочнее */
+/* } */
+
+/* Общие настройки анимации */
+/* .blob-1, .blob-2, .blob-3 { */
+/* transform-origin: center; */
+/* animation: blob-bounce 3s ease-in-out infinite; */
+/* } */
+
+/* Разные задержки и направления для хаоса */
+
+/* .blob-1 { */
+/* Вылетает вверх и влево */
+/* --x: -45px; */
+/* --y: -45px; */
+/* animation-delay: 0s; */
+/* } */
+
+/* .blob-2 { */
+/* Вылетает вниз и вправо */
+/* --x: 45px; */
+/* --y: 45px; */
+/* animation-delay: 0.2s; */
+/* } */
+
+/* .blob-3 { */
+/* Вылетает вправо */
+/* --x: 50px; */
+/* --y: -10px; */
+/* animation-delay: 0.4s; */
+/* r: 20px;
+   Можно менять радиус в CSS если это circle */
+/* } */
+
+/* @keyframes blob-bounce { */
+/* 0%, 100% { */
+/* transform: translate(0, 0); */
+/* } */
+/* 25% { */
+/* Вылетели */
+/* transform: translate(var(--x), var(--y)); */
+/* } */
+/* 50% { */
+/* Замерли на мгновение или чуть дрогнули */
+/* transform: translate(var(--x), var(--y)) scale(0.9); */
+/* } */
+/* 75% { */
+/* Начали возвращаться */
+/* transform: translate(0, 0); */
+/* } */
+/* } */
