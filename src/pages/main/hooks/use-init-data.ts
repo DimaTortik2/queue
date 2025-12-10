@@ -2,14 +2,65 @@ import { useMemo } from 'react';
 import type { ILine, IUser, IUserDataElement } from '../interfaces';
 import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
 
+
+const avatars = import.meta.glob('../../../assets/avatars/*.png', {
+	eager: true,
+	query: { format: 'webp', quality: 10 },
+	import: 'default',
+});
+
+console.log('avatars :', avatars);
+
 export function useInitializeData() {
 	// С Бэкэнда
+
 	const userData = useMemo(() => {
+		const UNIQUE_NAMES = [
+			'Иван Петров',
+			'Мария Смирнова',
+			'Алексей Кузнецов',
+			'Елена Волкова',
+			'Дмитрий Павлов',
+			'Ольга Николаева',
+			'Сергей Фёдоров',
+			'Татьяна Морозова',
+			'Андрей Козлов',
+			'Наталья Соколова',
+			'Михаил Зайцев',
+			'Екатерина Лебедева',
+			'Павел Антонов',
+			'Анна Борисова',
+			'Владимир Семенов',
+			'Дарья Егорова',
+			'Игорь Орлов',
+			'Ксения Жукова',
+			'Георгий Белов',
+			'Людмила Новикова',
+			'Денис Киселев',
+			'Светлана Макарова',
+			'Виктор Карпов',
+			'Юлия Виноградова',
+			'Глеб Ковалев',
+			'Вера Тихомирова',
+			'Артем Медведев',
+			'Жанна Родионова',
+			'Максим Поляков',
+			'Надежда Цветкова',
+		];
+
+		
+
 		const userData: IUserDataElement[] = [];
 		for (let i = 0; i < USERS_COUNT_TEMP; i++) {
+			const fileName = `../../../assets/avatars/${i}.png`;
+
+			// Если картинки нет, ставим заглушку
+			const imgSrc =
+				avatars[fileName] || avatars['../../../assets/avatars/default.png'];
+
 			userData.push({
-				avaSrc: '/ava.png',
-				name: 'Юлька Любимая емае устал',
+				avaSrc: imgSrc as string,
+				name: UNIQUE_NAMES[i],
 				id: i,
 			});
 		}
