@@ -101,8 +101,8 @@ export const AVATAR = (() => {
 
 	return {
 		radius,
-		border :{
-			width : 17
+		border: {
+			width: 17,
 		},
 		initial: {
 			x: 0,
@@ -119,6 +119,7 @@ export const AVATAR = (() => {
 				x: selectedScale * radius * MULTS.avatar.selected.margin.x,
 			},
 		},
+		rootPath: '../../../assets/avatars/',
 	};
 })();
 

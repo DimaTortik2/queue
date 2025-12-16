@@ -1,6 +1,6 @@
 export interface IUserDataElement {
 	name: string;
-	avaSrc: string;
+	imageObj: HTMLImageElement;
 	id: number;
 }
 

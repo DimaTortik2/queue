@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@generouted/react-router": "^1.20.0",
     "@react-spring/konva": "^10.0.3",
     "@tailwindcss/vite": "^4.1.11",
     "clsx": "^2.1.1",
@@ -20,7 +21,7 @@
     "react-dom": "^19.1.0",
     "react-konva": "^19.2.0",
     "react-router": "^7.7.0",
-    "react-router-dom": "^7.7.0",
+    "react-router-dom": "^7.10.1",
     "react-spring": "^10.0.3",
     "react-zoom-pan-pinch": "^3.4.4",
     "tailwindcss": "^4.1.11",

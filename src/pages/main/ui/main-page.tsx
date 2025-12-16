@@ -64,7 +64,7 @@ export function MainPage() {
 							<UserAvatar
 								onRegister={setAvatarsRefs}
 								onAvatarClick={handleAvatarClick}
-								avatarSrc={user.avaSrc}
+								imageObj={user.imageObj}
 								x={user.x}
 								y={user.y}
 								radius={AVATAR.radius}

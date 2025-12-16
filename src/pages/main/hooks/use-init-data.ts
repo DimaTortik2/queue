@@ -1,15 +1,20 @@
 import { useMemo } from 'react';
 import type { ILine, IUser, IUserDataElement } from '../interfaces';
 import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
+import { createImg } from '../../../app/ib/create-ing';
 
 
 const avatars = import.meta.glob('../../../assets/avatars/*.png', {
 	eager: true,
-	query: { format: 'webp', quality: 10 },
+	query: {
+		format: 'webp',
+		w: 250,
+		h: 250,
+		fit: 'cover',
+		quality: 80,
+	},
 	import: 'default',
 });
-
-console.log('avatars :', avatars);
 
 export function useInitializeData() {
 	// С Бэкэнда
@@ -48,18 +53,18 @@ export function useInitializeData() {
 			'Надежда Цветкова',
 		];
 
-		
-
 		const userData: IUserDataElement[] = [];
 		for (let i = 0; i < USERS_COUNT_TEMP; i++) {
-			const fileName = `../../../assets/avatars/${i}.png`;
+			const fileName = AVATAR.rootPath + `${i}.png`;
 
 			// Если картинки нет, ставим заглушку
 			const imgSrc =
-				avatars[fileName] || avatars['../../../assets/avatars/default.png'];
+				avatars[fileName] || avatars[AVATAR.rootPath + 'default.png'];
+
+			const imageObj = createImg(imgSrc as string);
 
 			userData.push({
-				avaSrc: imgSrc as string,
+				imageObj: imageObj,
 				name: UNIQUE_NAMES[i],
 				id: i,
 			});
@@ -77,7 +82,7 @@ export function useInitializeData() {
 						? AVATAR.initial.x
 						: AVATAR.initial.x + AVATAR.initial.space.x,
 					y: AVATAR.initial.y + AVATAR.initial.space.y * i,
-					avaSrc: user.avaSrc,
+					imageObj: user.imageObj,
 					name: user.name,
 					id: user.id,
 				};
