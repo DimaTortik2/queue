@@ -32,7 +32,7 @@ const MULTS: typeof DEFAULT_MULTS = (() => {
 			return {
 				avatar: {
 					selected: {
-						scale: initialStageScale * 12.8,
+						scale: initialStageScale * 11.5,
 						margin: {
 							x: 0.75,
 						},
@@ -143,17 +143,38 @@ export const COLORS = {
 	red: '#FF6767',
 	yellow: '#FFF98A',
 	black: '#000000',
-	purple: '#A069FF',
+	purple: '#9261E7',
 	green: '#41AF4E',
-	text: '#FFFFFF',
 	text78: '#ffffffd0',
 	text70: '#ffffffb9',
-	bg: {
-		leave: '#A64F4F',
+	text: {
+		important: '#ffffffd0',
+		unimportant: '#ffffffb9',
+		ghost: '#FFFFFF0C',
+	},
+
+	icon: { passive: '#FFFFFF32', active: '#FFFFFF' },
+
+	userActionButtons: {
+		leave: {
+			bg: {
+				passive: '#A64F4F',
+				active: '#FF6767',
+			},
+			text: '#FFFFFF',
+		},
+		exchange: {
+			bg: {
+				passive: '#9261E7',
+				active: '#A779F7',
+			},
+			text: '#FFFFFF',
+		},
 	},
 	avatar: {
 		border: {
 			normal: '#ffffff24',
+			hover: '#ffffff52',
 		},
 	},
 	line: '#ffffff06',
@@ -161,7 +182,7 @@ export const COLORS = {
 
 export const KONVA = {
 	font: {
-		size: 120,
+		size: 100,
 	},
 	minSize: {
 		userPopUp: {
@@ -176,7 +197,7 @@ export const KONVA = {
 
 export const MAX = {
 	userName: {
-		first: 7,
+		first: 6,
 		second: 9,
 	},
 };

@@ -29,15 +29,13 @@ export const KonvaDiv = forwardRef<Konva.Group, IProps>(
 		const [rectSize, setRectSize] = useState({ w: 0, h: 0 });
 		let groupX = x;
 
-
-
 		if (centerX) {
 			groupX = x - rectSize.w / 2;
 		} else if (EndX) {
 			groupX = x - rectSize.w;
 		}
 
-		let groupY = centerY ? y - rectSize.h / 2 : y;
+		const groupY = centerY ? y - rectSize.h / 2 : y;
 
 		useLayoutEffect(() => {
 			const node = contentGroupRef.current;

@@ -6,8 +6,8 @@ interface IProps extends KonvaProps {
 	gap?: number;
 }
 
-export function KonvaVerticalStack({ x, y, children, gap = 5 }: IProps) {
-	let currY = 0;
+export function KonvaHorizontalStack({ x, y, children, gap = 5 }: IProps) {
+	let currX = 0;
 
 	return (
 		<Group x={x} y={y}>
@@ -16,21 +16,21 @@ export function KonvaVerticalStack({ x, y, children, gap = 5 }: IProps) {
 
 				const childProps = child.props as {
 					fontSize?: number;
-					height?: number;
-					heightInStack?: number;
-					marginBottom?: number;
+					width?: number;
+					widthInStack?: number;
+					marginRight?: number;
 				};
-				const childH =
-					childProps.heightInStack ||
-					childProps.height ||
+				const childW =
+					childProps.widthInStack ||
+					childProps.width ||
 					childProps.fontSize ||
 					15;
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const styledChild = React.cloneElement(child, { y: currY } as any);
+				const styledChild = React.cloneElement(child, { x: currX } as any);
 
-				const mb = childProps.marginBottom || 0;
-				currY += childH + gap + mb;
+				const mr = childProps.marginRight || 0;
+				currX += childW + gap + mr;
 
 				return styledChild;
 			})}

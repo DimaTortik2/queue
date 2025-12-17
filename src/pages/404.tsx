@@ -8,15 +8,10 @@ export default function ErrorPage() {
 	return (
 		<CenteredContent>
 			<div className={classes.contentWrapper}>
-				<ErrorIcon
-					color='#ffffff20'
-					w={(((window.innerWidth / 100) * window.innerHeight) / 100) * 1.3}
-					h={(((window.innerWidth / 100) * window.innerHeight) / 100) * 1.3}
-				/>
+				<ErrorIcon color='#ffffff20' w={100} h={100} />
 				<p>Что-то ты не туда пошел, Дорогой мой друг</p>
 				<Link to={'/'}>
-					<Button variant='red' className='text-xl py-2 px-4'
-					>
+					<Button variant='red' className='text-xl py-2 px-4'>
 						Давай на главную
 					</Button>
 				</Link>

@@ -3,7 +3,6 @@ import type { ILine, IUser, IUserDataElement } from '../interfaces';
 import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
 import { createImg } from '../../../app/ib/create-ing';
 
-
 const avatars = import.meta.glob('../../../assets/avatars/*.png', {
 	eager: true,
 	query: {
@@ -55,11 +54,11 @@ export function useInitializeData() {
 
 		const userData: IUserDataElement[] = [];
 		for (let i = 0; i < USERS_COUNT_TEMP; i++) {
-			const fileName = AVATAR.rootPath + `${i}.png`;
+			const fileName = AVATAR.rootPath + `${i+2}.png`;
 
 			// Если картинки нет, ставим заглушку
 			const imgSrc =
-				avatars[fileName] || avatars[AVATAR.rootPath + 'default.png'];
+				avatars[fileName] || avatars[AVATAR.rootPath + 'default-icon.png'];
 
 			const imageObj = createImg(imgSrc as string);
 

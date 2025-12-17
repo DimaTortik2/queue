@@ -7,7 +7,7 @@ interface IResult {
 
 export function splitUsername(userName: string): IResult {
 	const splittedUsername = userName.split(' ');
-	let userNameArr: string[] = [];
+	const userNameArr: string[] = [];
 
 	// Алексей Сороко Витальевич
 	if (splittedUsername[0].length > MAX.userName.first) {

@@ -65,9 +65,9 @@ export default function MainPage() {
 							x={user.x}
 							y={user.y}
 							radius={AVATAR.radius}
-							userId={user.id}
-							userIndex={i}
 							isLeft={i % 2 === 0}
+							userIndex={i}
+							userId={user.id}
 							isSelected={selectedUser ? user.id === selectedUser.id : false}
 							key={user.id}
 						/>

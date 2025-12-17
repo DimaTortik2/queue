@@ -1,10 +1,11 @@
 import Konva from 'konva';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { Circle, Group } from 'react-konva';
-import { AVATAR, COLORS } from '../../app/config/consts';
+import { Circle, Group, Text } from 'react-konva';
+import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';
 import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
+import { UseAddHover } from '../lib/hooks/useAddHover';
 
 interface IImageConfig {
 	offset: Vector2d;
@@ -40,6 +41,13 @@ export const UserAvatar = memo(
 		imageObj,
 		...props
 	}: IProps) => {
+		const avatarRef = useRef<Konva.Circle>(null);
+
+		const avatarHoverProps = UseAddHover({
+			scaleHover: 1.05,
+			targetRef: avatarRef,
+		});
+
 		const mainGroupRef = useRef<Konva.Group>(null);
 		const cachedGroupRef = useRef<Konva.Group>(null);
 
@@ -126,8 +134,20 @@ export const UserAvatar = memo(
 			// группа, что двигается и склеивает всё
 			<Group x={x} y={y} ref={mainGroupRef} {...props}>
 				{/* Кэшируемая группа */}
-				<Group ref={cachedGroupRef} x={0} y={0}>
+				<Group
+					onMouseEnter={e => {
+						// e.currentTarget.clearCache();
+						avatarHoverProps.onMouseEnter(e);
+					}}
+					onMouseLeave={e => {
+						avatarHoverProps.onMouseLeave(e);
+					}}
+					ref={cachedGroupRef}
+					x={0}
+					y={0}
+				>
 					<Circle
+						ref={avatarRef}
 						x={0}
 						y={0}
 						radius={AVATAR.radius}
@@ -153,7 +173,17 @@ export const UserAvatar = memo(
 					/>
 				</Group>
 				{/* / Кэшируемая группа */}
-
+				<Text
+					text={String(userIndex + 1)}
+					listening={false}
+					fill={COLORS.text.ghost}
+					fontSize={KONVA.font.size}
+					x={
+						(userIndex % 2 === 0 ? -1 : 1) * AVATAR.radius * 1.5 -
+						((userIndex > 9 ? 2 : 1) * KONVA.font.size) / 3
+					}
+					y={-KONVA.font.size / 2}
+				/>
 				{/* Он независим от кэширования , но находится в общей группе для синзронного движения */}
 				{isSelected && (
 					<UserPopUp
