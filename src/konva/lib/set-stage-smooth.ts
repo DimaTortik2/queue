@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import type { IStage } from '../../pages/main/interfaces';
+import type { IStage } from '../../pages/(main)/interfaces';
 import type { Stage } from 'konva/lib/Stage';
 
 export function setStageSmooth({

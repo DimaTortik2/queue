@@ -3,7 +3,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Circle, Group } from 'react-konva';
 import { AVATAR, COLORS } from '../../app/config/consts';
 import { UserPopUp } from './userPopUp';
-import type { IUser } from '../../pages/main/interfaces';
+import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
 
 interface IImageConfig {

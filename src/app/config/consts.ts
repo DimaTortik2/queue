@@ -138,6 +138,13 @@ export const STAGE = (() => {
 })();
 
 export const COLORS = {
+	blue: '#52A8FF',
+	white: '#ffffff',
+	red: '#FF6767',
+	yellow: '#FFF98A',
+	black: '#000000',
+	purple: '#A069FF',
+	green: '#41AF4E',
 	text: '#FFFFFF',
 	text78: '#ffffffd0',
 	text70: '#ffffffb9',

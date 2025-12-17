@@ -1,7 +1,7 @@
 import Konva from 'konva';
 import { memo, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
-import type { ILine } from '../../pages/main/interfaces';
+import type { ILine } from '../../pages/(main)/interfaces';
 import { COLORS } from '../../app/config/consts';
 
 interface IProps {
@@ -23,7 +23,6 @@ export const UserLine = memo(
 		onRegister,
 	}: IProps) => {
 		const lineRef = useRef<Konva.Line>(null);
-
 
 		useEffect(() => {
 			if (lineRef.current) {
