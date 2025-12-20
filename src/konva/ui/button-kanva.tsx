@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Text, Label, Tag } from 'react-konva';
 import type { KonvaProps } from '../interfaces/kanva.interface';
 import { COLORS, KONVA } from '../../app/config/consts';
-import { UseAddHover } from '../lib/hooks/useAddHover';
+import { UseAddHover } from '../lib/hooks/use-add-hover';
 
 interface IProps extends KonvaProps {
 	children?: ReactNode;

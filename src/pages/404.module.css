@@ -5,11 +5,10 @@
 	justify-content: center;
 	gap: 2rem;
 }
-p {
+.p {
 	color: #e8e8e850;
 	font-size: 1.5rem;
 }
-button {
-	color: aqua;
-  border-radius: 30px;
+.button {
+	border-radius: 30px;
 }

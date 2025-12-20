@@ -6,7 +6,7 @@ import generouted from '@generouted/react-router/plugin';
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), generouted(), tailwindcss(), imagetools()],
+	plugins: [generouted(), react(), tailwindcss(), imagetools()],
 	server: {
 		host: true,
 	},

@@ -177,7 +177,7 @@ export function useUserClick({
 			if (selectedUser === null) {
 				const selectedUser = initialUsers[selectedUserIndex];
 
-				setSelectedUser({ ...selectedUser, index: selectedUserIndex });
+				setSelectedUser({ ...selectedUser, position: selectedUserIndex + 1 });
 
 				const scale = AVATAR.select.scale;
 

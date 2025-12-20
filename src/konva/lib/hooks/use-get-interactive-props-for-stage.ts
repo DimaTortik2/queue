@@ -1,6 +1,7 @@
 import Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import type { Stage } from 'konva/lib/Stage';
+import type { KonvaEventObject } from 'konva/lib/Node';
 
 interface ICoords {
 	x: number;
@@ -18,7 +19,7 @@ const getDistance = (p1: ICoords, p2: ICoords): number => {
 	return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
 
-export function getInteractivePropsForStage({
+export function useGetInteractivePropsForStage({
 	stageRef,
 	maxScale,
 	minScale,
@@ -30,7 +31,7 @@ export function getInteractivePropsForStage({
 }) {
 	Konva.hitOnDragEnabled = true;
 
-	const onWheel = (e: any) => {
+	const onWheel = (e: KonvaEventObject<WheelEvent>) => {
 		// наша тактика тут :
 		// 1. вычислить новый скейл
 		// 2. найти насколько надо сдвинуть stage дабы точка под курсором там и осталась при новом скейле:
@@ -46,7 +47,7 @@ export function getInteractivePropsForStage({
 
 		const screenPointCoords = { x: e.evt.clientX, y: e.evt.clientY };
 
-		let direction = e.evt.deltaY > 0 ? -1 : 1;
+		const direction = e.evt.deltaY > 0 ? -1 : 1;
 		let newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
 
 		newScale = Math.min(maxScale, Math.max(minScale, newScale));
@@ -80,7 +81,7 @@ export function getInteractivePropsForStage({
 	};
 
 	const onTouchMove = useCallback(
-		(e: any) => {
+		(e: KonvaEventObject<TouchEvent>) => {
 			const stage = stageRef.current;
 			if (!stage) return;
 			const touch1 = e.evt.touches[0];
@@ -136,7 +137,7 @@ export function getInteractivePropsForStage({
 				prevDistance.current = newDistance;
 			}
 		},
-		[dragStopped, prevCenter, prevDistance]
+		[dragStopped, prevCenter, prevDistance, maxScale, minScale, stageRef]
 	);
 
 	return {

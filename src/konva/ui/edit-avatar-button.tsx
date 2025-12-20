@@ -2,7 +2,7 @@ import { Group, Path, Rect } from 'react-konva';
 import { COLORS } from '../../app/config/consts';
 import { useRef } from 'react';
 import type Konva from 'konva';
-import { UseAddHover } from '../lib/hooks/useAddHover';
+import { UseAddHover } from '../lib/hooks/use-add-hover';
 
 const ORIGINAL_SIZE = 38;
 

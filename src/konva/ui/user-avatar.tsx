@@ -2,10 +2,10 @@ import Konva from 'konva';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Circle, Group, Text } from 'react-konva';
 import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
-import { UserPopUp } from './userPopUp';
+import { UserPopUp } from './user-popup';
 import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
-import { UseAddHover } from '../lib/hooks/useAddHover';
+import { UseAddHover } from '../lib/hooks/use-add-hover';
 
 interface IImageConfig {
 	offset: Vector2d;

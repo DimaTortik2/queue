@@ -1,25 +1,36 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { getDynamicSize } from '../../app/utils/get-dynamic-size';
+import { cn } from '../../app/utils/cn';
 
 export interface IconProps {
 	w?: number;
 	h?: number;
 	color?: string;
 	children?: ReactNode;
+	className?: string;
+	style?: CSSProperties;
+	onClick?: () => void;
 }
 
 export function IconWrapper({
 	children,
-	h = 30,
-	w = 30,
-	color = '#000000',
+	w,
+	h,
+	color,
+	className,
+	onClick,
 }: IconProps) {
+	const sizeProps = getDynamicSize(w, h);
+
 	return (
 		<div
-			style={{
-				height: h,
-				width: w,
-				color: color,
-			}}
+			style={{ ...sizeProps.style, color }}
+			onClick={onClick}
+			className={cn(
+				'flex items-center justify-center',
+				className,
+				sizeProps.className
+			)}
 		>
 			{children}
 		</div>

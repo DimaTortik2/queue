@@ -1,7 +1,6 @@
 import { IconWrapper, type IconProps } from './_icon-wrapper';
 
 export function ErrorIcon(props: IconProps) {
-	console.log(props.h, props.w);
 	return (
 		<IconWrapper {...props}>
 			<svg

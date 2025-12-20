@@ -1,7 +1,6 @@
 import { getStageXToCenterQueue } from '../../konva/lib/helpers/get-stage-x-to-center-queue';
 
 export const USERS_COUNT_TEMP = 30;
-export const USER_ID_TEMP = 2;
 
 export const DEVICE = {
 	isMobile: window.innerWidth < 660,
@@ -155,6 +154,15 @@ export const COLORS = {
 
 	icon: { passive: '#FFFFFF32', active: '#FFFFFF' },
 
+	thematic: {
+		switchUsers: {
+			header: '#9261E779',
+			border: '#9261E732',
+			separator: '#9261E734',
+			bgWrapper: '#05000da9',
+		},
+	},
+
 	userActionButtons: {
 		leave: {
 			bg: {
@@ -178,6 +186,18 @@ export const COLORS = {
 		},
 	},
 	line: '#ffffff06',
+
+	modal: {
+		bg: '#212121',
+		title: '#ffffff47',
+		separator: '#ffffff14',
+		bgWrapper: '#00000094',
+	},
+
+	arrows: {
+		up: '#41AF4E',
+		down: '#FF6767',
+	},
 };
 
 export const KONVA = {

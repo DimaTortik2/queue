@@ -1,4 +1,6 @@
 import { atom } from 'jotai';
-import type { ISelectedUser } from '../../pages/(main)/interfaces';
+import type { IUser } from '../../pages/(main)/interfaces';
 
-export const selectedUserAtom = atom<ISelectedUser | null>(null);
+export const selectedUserAtom = atom<IUser | null>(null);
+export const currentUserAtom = atom<IUser | null>(null);
+export const isSwithUsersModalVisibleAtom = atom<boolean>(false);

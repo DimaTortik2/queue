@@ -2,9 +2,13 @@ import { useEffect, useRef } from 'react';
 import { Text, Group } from 'react-konva';
 import type { KonvaProps } from '../interfaces/kanva.interface';
 import Konva from 'konva';
-import { AVATAR, COLORS, KONVA, USER_ID_TEMP } from '../../app/config/consts';
-import { useAtomValue } from 'jotai';
-import { selectedUserAtom } from '../../app/strore/atoms';
+import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
+import { useAtomValue, useSetAtom } from 'jotai';
+import {
+	currentUserAtom,
+	isSwithUsersModalVisibleAtom,
+	selectedUserAtom,
+} from '../../app/strore/atoms';
 import { KonvaDiv } from './konva-div';
 import { KonvaVerticalStack } from './konva-vertical-stack';
 import { ButtonKanva } from './button-kanva';
@@ -35,7 +39,7 @@ const identifyUser = ({
 	selectedUserId,
 }: {
 	selectedUserId?: IUser['id'];
-	ownUserId: IUser['id'];
+	ownUserId?: IUser['id'];
 }): TIdentifity => {
 	if (ownUserId === selectedUserId) {
 		return 'me';
@@ -44,7 +48,13 @@ const identifyUser = ({
 	}
 };
 
-const getButtonProps = (identify: TIdentifity) => {
+const getButtonProps = ({
+	identify,
+	onSwitchUsers,
+}: {
+	identify: TIdentifity;
+	onSwitchUsers: () => void;
+}) => {
 	if (identify === 'me') {
 		return {
 			bgColor: COLORS.userActionButtons.leave.bg.passive,
@@ -59,12 +69,16 @@ const getButtonProps = (identify: TIdentifity) => {
 			bgColorHover: COLORS.userActionButtons.exchange.bg.active,
 			color: COLORS.userActionButtons.exchange.text,
 			children: 'Поменяться',
-			onClick: () => console.log('Поменяться'),
+			// onClick: () => console.log('Поменяться'),
+			onClick: onSwitchUsers,
 		};
 	}
 };
 
 export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
+	const setIsSwithUsersModalVisible = useSetAtom(isSwithUsersModalVisibleAtom);
+	const currentUser = useAtomValue(currentUserAtom);
+
 	const selectedUser = useAtomValue(selectedUserAtom);
 	const groupRef = useRef<Konva.Group>(null);
 
@@ -91,7 +105,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 	console.log('render PopUp');
 
 	const userIdentifity = identifyUser({
-		ownUserId: USER_ID_TEMP,
+		ownUserId: currentUser?.id,
 		selectedUserId: selectedUser?.id,
 	});
 
@@ -156,7 +170,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 							listening={false}
 						/>
 						<Text
-							text={String(selectedUser ? selectedUser?.index + 1 : 0)}
+							text={String(selectedUser ? selectedUser?.position : 0)}
 							fontSize={positionFontSize}
 							fill={COLORS.text.unimportant}
 							align='center'
@@ -165,7 +179,10 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 					</KonvaHorizontalStack>
 				</Group>
 				<ButtonKanva
-					{...getButtonProps(userIdentifity)}
+					{...getButtonProps({
+						identify: userIdentifity,
+						onSwitchUsers: () => setIsSwithUsersModalVisible(true),
+					})}
 					fontSize={KONVA.font.size / 1.5}
 					cornerRadius={60}
 					padding={buttonPadding}

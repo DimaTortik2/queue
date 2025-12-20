@@ -7,11 +7,8 @@ export interface IUserDataElement {
 export type IUser = {
 	x: number;
 	y: number;
+	position: number;
 } & IUserDataElement;
-
-export type ISelectedUser = {
-	index: number;
-} & IUser;
 
 export interface ILineCoords {
 	x1: number;
