@@ -146,7 +146,7 @@ export function useUserClick({
 
 		initialLines.forEach(l => {
 			const lineNode: Konva.Line = linesRef.current[l.id];
-			let targetPoints = [l.x1, l.y1, l.x2, l.y2];
+			const targetPoints = [l.x1, l.y1, l.x2, l.y2];
 
 			lineNode.to({
 				duration: 0.3,

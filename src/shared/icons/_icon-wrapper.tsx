@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { getDynamicSize } from '../../app/utils/get-dynamic-size';
 import { cn } from '../../app/utils/cn';
+import { cssVar } from '../../app/utils/cssVar';
+import { COLORS } from '../../app/config/consts';
 
 export interface IconProps {
 	w?: number;
@@ -16,7 +18,7 @@ export function IconWrapper({
 	children,
 	w,
 	h,
-	color,
+	color = COLORS.white,
 	className,
 	onClick,
 }: IconProps) {
@@ -24,12 +26,12 @@ export function IconWrapper({
 
 	return (
 		<div
-			style={{ ...sizeProps.style, color }}
+			style={{ ...sizeProps.style, ...cssVar('color', color) }}
 			onClick={onClick}
 			className={cn(
-				'flex items-center justify-center',
-				className,
-				sizeProps.className
+				'flex items-center justify-center text-[var(--color)]',
+				sizeProps.className,
+				className
 			)}
 		>
 			{children}

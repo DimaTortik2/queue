@@ -1,17 +1,9 @@
-import { useAtom, useAtomValue } from 'jotai';
-import {
-	currentUserAtom,
-	isSwithUsersModalVisibleAtom,
-	selectedUserAtom,
-} from '../../app/strore/atoms';
-import { ModalBottom } from '../../shared/modal/modal-bottom';
-import { SuggestSwitchIcon } from '../../shared/icons/suggest-switch-icon';
-import { COLORS } from '../../app/config/consts';
-import { UserDesc } from '../../entities/user-desc/user-desc';
-import type { IUser } from '../../pages/(main)/interfaces';
-import { ArrowUpIcon } from '../../shared/icons/arrow-up-icon';
-import { ArrowDownIcon } from '../../shared/icons/arrow-down-icon';
+import { UserDesc } from '../../../../entities/user-desc/user-desc';
+import type { IUser } from '../../../../pages/(main)/interfaces';
+import { ArrowUpIcon } from '../../../../shared/icons/arrow-up-icon';
+import { ArrowDownIcon } from '../../../../shared/icons/arrow-down-icon';
 import type { ReactNode } from 'react';
+import { COLORS } from '../../../../app/config/consts';
 
 const pluralizePlaces = (n: number) => {
 	const forms = ['место', 'места', 'мест'];
@@ -34,7 +26,7 @@ const pluralizePlaces = (n: number) => {
 	return `${isPositive ? '+' : '-'}${num} ${result}`;
 };
 
-const getUserDescsInCurrectOrderArr = ({
+export const getUserDescsInCurrectOrderArr = ({
 	selectedUser,
 	currentUser,
 }: {
@@ -114,39 +106,3 @@ const getUserDescsInCurrectOrderArr = ({
 
 	return components;
 };
-
-export function SwitchUsersModal() {
-	const [isSwithUsersModalVisible, setIsSwithUsersModalVisible] = useAtom(
-		isSwithUsersModalVisibleAtom
-	);
-	const selectedUser = useAtomValue(selectedUserAtom);
-	const currentUser = useAtomValue(currentUserAtom);
-
-	const handleClose = () => setIsSwithUsersModalVisible(false);
-
-	return (
-		<ModalBottom
-			visible={isSwithUsersModalVisible}
-			onClose={handleClose}
-			title='Просьба поменяться'
-			setctions={[
-				<div className='inline-grid grid-cols-[max-content_auto] gap-5 items-center'>
-					{...getUserDescsInCurrectOrderArr({ selectedUser, currentUser })}
-				</div>,
-			]}
-			withBorder
-			borderColor={COLORS.thematic.switchUsers.border}
-			separatorsHeight={3}
-			separatorsColor={COLORS.thematic.switchUsers.separator}
-			bgWrapperColor={COLORS.thematic.switchUsers.bgWrapper}
-			headerIcon={
-				<SuggestSwitchIcon
-					w={25}
-					h={25}
-					color={COLORS.thematic.switchUsers.header}
-					onClick={handleClose}
-				/>
-			}
-		/>
-	);
-}

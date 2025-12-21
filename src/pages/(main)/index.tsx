@@ -8,7 +8,7 @@ import { UserLine } from '../../konva/ui/user-line';
 import { useInitializeData } from './hooks/use-init-data';
 import { useInitializeRefs } from './hooks/use-init-refs';
 import { useUserClick } from './hooks/use-user-click';
-import { SwitchUsersModal } from '../../features/modals/switch-users-modal';
+import { SwitchUsersModal } from '../../features/modals/switch-users/switch-users-modal';
 import { useGetInteractivePropsForStage } from '../../konva/lib/hooks/use-get-interactive-props-for-stage';
 
 export default function MainPage() {

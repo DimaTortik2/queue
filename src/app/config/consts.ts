@@ -160,6 +160,9 @@ export const COLORS = {
 			border: '#9261E732',
 			separator: '#9261E734',
 			bgWrapper: '#05000da9',
+			input: {
+				border: '#9261E732',
+			},
 		},
 	},
 
