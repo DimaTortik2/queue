@@ -4,6 +4,7 @@ import { IconWrapper, type IconProps } from './_icon-wrapper';
 
 export function SendIcon({
 	color = COLORS.icon.passive,
+	hoverColor = COLORS.white,
 	className,
 	...props
 }: IconProps) {
@@ -11,9 +12,10 @@ export function SendIcon({
 		<IconWrapper
 			color={color}
 			className={cn(
-				className,
-				'hover:text-[#ffffff] transition-colors hover:scale-105'
+				'transition-colors hover:scale-105',
+				className
 			)}
+			hoverColor={hoverColor}
 			{...props}
 		>
 			<svg

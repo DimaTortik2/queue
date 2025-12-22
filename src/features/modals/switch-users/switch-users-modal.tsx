@@ -1,14 +1,18 @@
 import { ModalBottom } from '../../../shared/modal/modal-bottom';
 import { SuggestSwitchIcon } from '../../../shared/icons/suggest-switch-icon';
 import { COLORS } from '../../../app/config/consts';
-
 import { getUserDescsInCurrectOrderArr } from './utils/get-user-descsIn-currect-order-arr';
 import { useSwitchUsersModal } from './hooks/use-switch-users-modal';
-import { MessangerInput } from '../../../shared/inputs/messanger-input';
+import { MessangerInput } from '../../../shared/inputs/messanger/messanger-input';
 
 export function SwitchUsersModal() {
-	const { currentUser, handleClose, isSwithUsersModalVisible, selectedUser } =
-		useSwitchUsersModal();
+	const {
+		currentUser,
+		handleClose,
+		isSwithUsersModalVisible,
+		selectedUser,
+		handleSend,
+	} = useSwitchUsersModal();
 
 	return (
 		<ModalBottom
@@ -19,9 +23,12 @@ export function SwitchUsersModal() {
 				<div className='inline-grid grid-cols-[max-content_auto] gap-5 items-center'>
 					{...getUserDescsInCurrectOrderArr({ selectedUser, currentUser })}
 				</div>,
-				<MessangerInput onSend={text => console.log(text)} />,
+				<MessangerInput
+					placeHolder={'Просьба...'}
+					maxLength={200}
+					onSend={handleSend}
+				/>,
 			]}
-			withBorder
 			borderColor={COLORS.thematic.switchUsers.border}
 			separatorsHeight={3}
 			separatorsColor={COLORS.thematic.switchUsers.separator}

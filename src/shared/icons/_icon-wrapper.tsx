@@ -8,6 +8,7 @@ export interface IconProps {
 	w?: number;
 	h?: number;
 	color?: string;
+	hoverColor?: string;
 	children?: ReactNode;
 	className?: string;
 	style?: CSSProperties;
@@ -21,15 +22,20 @@ export function IconWrapper({
 	color = COLORS.white,
 	className,
 	onClick,
+	hoverColor,
 }: IconProps) {
 	const sizeProps = getDynamicSize(w, h);
 
 	return (
 		<div
-			style={{ ...sizeProps.style, ...cssVar('color', color) }}
+			style={{
+				...sizeProps.style,
+				...cssVar('color', color),
+				...cssVar('hcolor', hoverColor),
+			}}
 			onClick={onClick}
 			className={cn(
-				'flex items-center justify-center text-[var(--color)]',
+				'flex items-center justify-center text-[var(--color)] hover:text-[var(--hcolor)]',
 				sizeProps.className,
 				className
 			)}

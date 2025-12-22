@@ -12,11 +12,13 @@ export function useSwitchUsersModal() {
 	const selectedUser = useAtomValue(selectedUserAtom);
 	const currentUser = useAtomValue(currentUserAtom);
 	const handleClose = () => setIsSwithUsersModalVisible(false);
+	const handleSend = (text: string) => console.log(text);
 
 	return {
 		isSwithUsersModalVisible,
 		selectedUser,
 		currentUser,
 		handleClose,
+		handleSend,
 	};
 }
