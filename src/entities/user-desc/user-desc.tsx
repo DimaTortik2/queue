@@ -4,14 +4,14 @@ import { cn } from '../../app/utils/cn';
 interface IProps {
 	name?: string;
 	position?: number;
-	avatar?: HTMLImageElement;
+	imgSrc?: string;
 	reflect?: boolean;
 	className?: string;
 }
 
 export function UserDesc({
 	className,
-	avatar,
+	imgSrc,
 	name,
 	position,
 	reflect = false,
@@ -25,7 +25,7 @@ export function UserDesc({
 			)}
 		>
 			<img
-				src={(avatar && avatar.src) || '../../assets/default-icon.png'}
+				src={imgSrc || '../../assets/default-icon.png'}
 				alt='Аватарка'
 				className='border-[2px] rounded-full w-[5em] h-[5em]'
 				style={{

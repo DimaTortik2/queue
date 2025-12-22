@@ -1,11 +1,12 @@
 import Konva from 'konva';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { Circle, Group, Text } from 'react-konva';
 import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
 import { UserPopUp } from './user-popup';
 import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
 import { UseAddHover } from '../lib/hooks/use-add-hover';
+import useImage from 'use-image';
 
 interface IImageConfig {
 	offset: Vector2d;
@@ -15,7 +16,7 @@ interface IImageConfig {
 interface IProps extends Konva.NodeConfig {
 	isLeft: boolean;
 	isSelected: boolean;
-	imageObj: HTMLImageElement;
+	imgSrc: string;
 	userIndex: number;
 	userId: IUser['id'];
 	onRegister: (node: Konva.Group | null, userId: IUser['id']) => void;
@@ -38,9 +39,11 @@ export const UserAvatar = memo(
 		onRegister,
 		userId,
 		userIndex,
-		imageObj,
+		imgSrc,
 		...props
 	}: IProps) => {
+		const [imageObj] = useImage(imgSrc, 'anonymous');
+
 		const avatarRef = useRef<Konva.Circle>(null);
 
 		const avatarHoverProps = UseAddHover({
@@ -60,20 +63,7 @@ export const UserAvatar = memo(
 			};
 		}, [userId, onRegister]);
 
-		const [isLoaded, setIsLoaded] = useState<boolean>(imageObj.complete);
-
-		// на загрузку картинки : обозначаем , что она загружена
-		useEffect(() => {
-			if (!imageObj.complete) {
-				const onLoad = () => setIsLoaded(true);
-
-				imageObj.addEventListener('load', onLoad);
-
-				return () => imageObj.removeEventListener('load', onLoad);
-			} else {
-				setIsLoaded(true);
-			}
-		}, [imageObj]);
+		const isLoaded = !!imageObj;
 
 		const imageConfig: IImageConfig = useMemo((): IImageConfig => {
 			// Если не загрузили иконку, то ниче не смещаем , ниче не масштабируем

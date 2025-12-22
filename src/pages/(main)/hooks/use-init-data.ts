@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { ILine, IUser, IUserDataElement } from '../interfaces';
 import { AVATAR, USERS_COUNT_TEMP } from '../../../app/config/consts';
-import { createImg } from '../../../app/ib/create-ing';
 import { useSetAtom } from 'jotai';
 import { currentUserAtom } from '../../../app/strore/atoms';
 
@@ -61,13 +60,11 @@ export function useInitializeData() {
 			const fileName = AVATAR.rootPath + `${i + 2}.png`;
 
 			// Если картинки нет, ставим заглушку
-			const imgSrc =
-				avatars[fileName] || avatars[AVATAR.rootPath + 'default-icon.png'];
-
-			const imageObj = createImg(imgSrc as string);
+			const imgSrc = (avatars[fileName] ||
+				avatars[AVATAR.rootPath + 'default-icon.png']) as string;
 
 			userData.push({
-				imageObj: imageObj,
+				imgSrc: imgSrc,
 				name: UNIQUE_NAMES[i],
 				id: i,
 			});
@@ -85,7 +82,7 @@ export function useInitializeData() {
 						? AVATAR.initial.x
 						: AVATAR.initial.x + AVATAR.initial.space.x,
 					y: AVATAR.initial.y + AVATAR.initial.space.y * i,
-					imageObj: user.imageObj,
+					imgSrc: user.imgSrc,
 					name: user.name,
 					id: user.id,
 					position: i + 1,

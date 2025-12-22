@@ -1,6 +1,6 @@
 export interface IUserDataElement {
 	name: string;
-	imageObj: HTMLImageElement;
+	imgSrc: string;
 	id: number;
 }
 

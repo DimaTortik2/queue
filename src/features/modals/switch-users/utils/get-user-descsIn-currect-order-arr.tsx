@@ -57,7 +57,7 @@ export const getUserDescsInCurrectOrderArr = ({
 
 	const meComp: ReactNode = (
 		<UserDesc
-			avatar={currentUser?.imageObj}
+			imgSrc={currentUser?.imgSrc}
 			name={'Вы'}
 			position={currentUser?.position}
 			{...userProps}
@@ -67,7 +67,7 @@ export const getUserDescsInCurrectOrderArr = ({
 
 	const selectedUserComp: ReactNode = (
 		<UserDesc
-			avatar={selectedUser?.imageObj}
+			imgSrc={selectedUser?.imgSrc}
 			name={selectedUser?.name}
 			position={selectedUser?.position}
 			{...userProps}
