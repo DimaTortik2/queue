@@ -35,9 +35,9 @@ const getVariantStyles = (
 export function Button({ variant, style, ...props }: IProps) {
 	return (
 		<button
-			className='px-4 py-2'
+			className='px-[1em] py-[0.5em] rounded-2xl hover:scale-105 transition-transform cursor-pointer'
 			style={{ ...getVariantStyles(variant), ...style }}
 			{...props}
-		></button>
+		/>
 	);
 }

@@ -23,6 +23,7 @@ interface IProps extends TextareaAutosizeProps {
 	selectionLimitColor?: string;
 	sendIconColor?: string;
 	sendIconColorHover?: string;
+	defaultValue?: string;
 }
 
 export function MessangerInput({
@@ -39,7 +40,7 @@ export function MessangerInput({
 	placeHolder,
 	selectionAccentColor = setOpacity(accentColor, 0.5),
 	selectionLimitColor = setOpacity(limitColor, 0.5),
-
+	defaultValue,
 	...props
 }: IProps) {
 	const {
@@ -49,7 +50,8 @@ export function MessangerInput({
 		limitIconComponent,
 		lenght,
 		text,
-	} = useMessangerInput(limitIcon, maxLength, limitColor);
+		handleKeyDown,
+	} = useMessangerInput(limitIcon, maxLength, limitColor, onSend, defaultValue);
 
 	return (
 		<>
@@ -92,6 +94,7 @@ export function MessangerInput({
 						)}
 						placeholder={placeHolder}
 						value={text}
+						onKeyDown={handleKeyDown}
 						onChange={handleInput}
 						minRows={1}
 						maxRows={5}

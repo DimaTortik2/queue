@@ -164,6 +164,15 @@ export const COLORS = {
 				border: '#9261E732',
 			},
 		},
+		localRenaming: {
+			header: '#ffffff79',
+			border: '#ffffff32',
+			separator: '#ffffff34',
+			bgWrapper: '#00000da9',
+			input: {
+				border: '#ffffff32',
+			},
+		},
 	},
 
 	userActionButtons: {

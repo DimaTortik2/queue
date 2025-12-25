@@ -24,7 +24,7 @@ export function SwitchUsersModal() {
 					{...getUserDescsInCurrectOrderArr({ selectedUser, currentUser })}
 				</div>,
 				<MessangerInput
-					placeHolder={'Просьба...'}
+					placeHolder='Просьба...'
 					maxLength={200}
 					onSend={handleSend}
 				/>,

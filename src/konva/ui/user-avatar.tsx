@@ -2,7 +2,7 @@ import Konva from 'konva';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { Circle, Group, Text } from 'react-konva';
 import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
-import { UserPopUp } from './user-popup';
+import { UserPopUp } from './user-popup/ui/user-popup';
 import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
 import { UseAddHover } from '../lib/hooks/use-add-hover';

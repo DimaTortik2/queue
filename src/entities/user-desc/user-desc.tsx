@@ -42,15 +42,17 @@ export function UserDesc({
 				>
 					{name || 'Не пон'}
 				</p>
-				<p
-					style={{ color: COLORS.text70 }}
-					className={cn('text-[1.2em]', reflect && 'text-end')}
-				>
-					{'Место '}
-					<span className='text-[1.3em]' style={{ color: COLORS.white }}>
-						{position || 0}
-					</span>
-				</p>
+				{position && (
+					<p
+						style={{ color: COLORS.text70 }}
+						className={cn('text-[1.2em]', reflect && 'text-end')}
+					>
+						{'Место '}
+						<span className='text-[1.3em]' style={{ color: COLORS.white }}>
+							{position || 0}
+						</span>
+					</p>
+				)}
 			</div>
 		</div>
 	);

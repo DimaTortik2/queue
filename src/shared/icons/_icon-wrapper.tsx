@@ -22,7 +22,7 @@ export function IconWrapper({
 	color = COLORS.white,
 	className,
 	onClick,
-	hoverColor,
+	hoverColor = color,
 }: IconProps) {
 	const sizeProps = getDynamicSize(w, h);
 

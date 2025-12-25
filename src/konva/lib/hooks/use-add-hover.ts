@@ -30,7 +30,6 @@ export function UseAddHover({
 	scaleHover?: number;
 	targetRef?: React.RefObject<Konva.Node | null>;
 }) {
-	console.log(initialBorderColor, borderColorHover);
 
 	const onMouseEnter = (e: TEvent) => {
 		const container = e.target.getStage()?.container();

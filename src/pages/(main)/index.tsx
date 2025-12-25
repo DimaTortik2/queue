@@ -10,6 +10,7 @@ import { useInitializeRefs } from './hooks/use-init-refs';
 import { useUserClick } from './hooks/use-user-click';
 import { SwitchUsersModal } from '../../features/modals/switch-users/switch-users-modal';
 import { useGetInteractivePropsForStage } from '../../konva/lib/hooks/use-get-interactive-props-for-stage';
+import { LocalRenamingModal } from '../../features/modals/local-renaming/local-renaming-modal';
 
 export default function MainPage() {
 	const selectedUser = useAtomValue(selectedUserAtom);
@@ -79,6 +80,7 @@ export default function MainPage() {
 				</Layer>
 			</Stage>
 			<SwitchUsersModal />
+			<LocalRenamingModal />
 		</>
 	);
 }
