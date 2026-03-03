@@ -2,7 +2,7 @@ import Konva from 'konva';
 import { memo, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
 import type { ILine } from '../../pages/(main)/interfaces';
-import { COLORS } from '../../app/config/consts';
+import { getColor } from '../../app/config/theme';
 
 interface IProps {
 	initialX1: number;
@@ -33,14 +33,15 @@ export const UserLine = memo(
 			};
 		}, [lineId, onRegister]);
 
+
 		return (
 			<Line
 				ref={lineRef}
 				points={[initialX1, initialY1, initialX2, initialY2]}
 				strokeWidth={16}
-				stroke={COLORS.line}
+				stroke={getColor('mutedFg')}
 				listening={false}
 			/>
 		);
-	}
+	},
 );

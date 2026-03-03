@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { Text, Label, Tag } from 'react-konva';
 import type { KonvaProps } from '../interfaces/kanva.interface';
-import { COLORS, KONVA } from '../../app/config/consts';
+import { KONVA } from '../../app/config/consts';
 import { UseAddHover } from '../lib/hooks/use-add-hover';
+import { getColor } from '../../app/config/theme';
 
 interface IProps extends KonvaProps {
 	children?: ReactNode;
@@ -41,7 +42,7 @@ export function ButtonKanva({
 				text={children ? String(children) : ''}
 				padding={padding || 5}
 				fontSize={fontSize ? fontSize : KONVA.font.size}
-				fill={color ? color : COLORS.text.important}
+				fill={color ? color : getColor('fg')}
 				align='center'
 				verticalAlign='middle'
 				fontStyle='normal'

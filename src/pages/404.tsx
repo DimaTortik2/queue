@@ -13,7 +13,7 @@ export default function ErrorPage() {
 				<p className={classes.p}>Что-то ты не туда пошел, Дорогой мой друг</p>
 				<Link to={'/'}>
 					<Button
-						variant='red'
+						variant='exit'
 						className={clsx('text-xl py-2 px-4', classes.button)}
 					>
 						Давай на главную

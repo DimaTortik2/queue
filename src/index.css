@@ -1,16 +1,54 @@
 @import 'tailwindcss';
 
+@theme {
+	--color-bg: hsl(var(--bg));
+	--color-fg: hsl(var(--fg));
+
+	--color-neutral: hsl(var(--neutral));
+	--color-neutral-fg: hsl(var(--neutral-fg));
+
+	--color-muted-fg: hsl(var(--muted-fg));
+
+	--color-exit: hsl(var(--exit));
+	--color-exit-fg: hsl(var(--exit-fg));
+
+	--color-switch: hsl(var(--switch));
+	--color-switch-fg: hsl(var(--switch-fg));
+
+	--color-overlay: hsl(var(--overlay));
+
+	--color-save-seat: hsl(var(--save-seat));
+	--color-save-seat-fg: hsl(var(--save-seat-fg));
+
+	--color-in-charge: hsl(var(--in-charge));
+	--color-in-charge-fg: hsl(var(--in-charge-fg));
+
+	--color-accept: hsl(var(--accept));
+	--color-accept-fg: hsl(var(--accept-fg));
+
+	--color-renaming: hsl(var(--renaming));
+	--color-renaming-fg: hsl(var(--renaming-fg));
+}
+
+@layer base {
+	.dark {
+	}
+
+	body {
+		@apply bg-bg text-fg;
+	}
+}
+
 html,
 body {
 	overscroll-behavior: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+	display: none;
+}
 
-  .scrollbar-hide {
-    -ms-overflow-style: none; 
-    scrollbar-width: none;
-  }
-	
+.scrollbar-hide {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}

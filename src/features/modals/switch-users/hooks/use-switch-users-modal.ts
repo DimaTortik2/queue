@@ -20,5 +20,6 @@ export function useSwitchUsersModal() {
 		currentUser,
 		handleClose,
 		handleSend,
+		setIsSwithUsersModalVisible,
 	};
 }

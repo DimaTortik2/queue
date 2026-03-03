@@ -1,6 +1,6 @@
 import { Text, Group } from 'react-konva';
 import type { KonvaProps } from '../../../interfaces/kanva.interface';
-import { AVATAR, COLORS, KONVA } from '../../../../app/config/consts';
+import { AVATAR, KONVA } from '../../../../app/config/consts';
 import { KonvaDiv } from '../../konva-div';
 import { KonvaVerticalStack } from '../../konva-vertical-stack';
 import { ButtonKanva } from '../../button-kanva';
@@ -9,6 +9,7 @@ import { KonvaHorizontalStack } from '../../konva-horizontal-stack';
 import { getMainButtonProps } from '../helpers/get-main-buttom-props';
 import { useUserPopUp } from '../hooks/use-user-popup';
 import { getTextWidth } from '../helpers/get-text-width';
+import { getColor } from '../../../../app/config/theme';
 
 interface IProps extends KonvaProps {
 	isVisible: boolean;
@@ -42,7 +43,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 					<Text
 						text={firstName}
 						listening={false}
-						fill={COLORS.text78}
+						fill={getColor('mutedFg')}
 						fontSize={UserNameFontSize}
 						heightInStack={UserNameFontSize}
 						width={getTextWidth(firstName, UserNameFontSize)}
@@ -61,7 +62,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 					<Text
 						text={secondName}
 						listening={false}
-						fill={COLORS.text70}
+						fill={getColor('mutedFg')}
 						fontSize={UserNameFontSize / 3}
 					/>
 				)}
@@ -76,7 +77,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 							text='Место'
 							y={positionFontSize - placeFontSize}
 							fontSize={placeFontSize}
-							fill={COLORS.text70}
+							fill={getColor('mutedFg')}
 							align='center'
 							width={getTextWidth('Место', placeFontSize)}
 							listening={false}
@@ -84,7 +85,7 @@ export function UserPopUp({ x, y, isVisible, isLeft }: IProps) {
 						<Text
 							text={positionText}
 							fontSize={positionFontSize}
-							fill={COLORS.text.unimportant}
+							fill={getColor('fg')}
 							align='center'
 							listening={false}
 						/>

@@ -1,12 +1,13 @@
 import Konva from 'konva';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { Circle, Group, Text } from 'react-konva';
-import { AVATAR, COLORS, KONVA } from '../../app/config/consts';
+import { AVATAR, KONVA } from '../../app/config/consts';
 import { UserPopUp } from './user-popup/ui/user-popup';
 import type { IUser } from '../../pages/(main)/interfaces';
 import type { Vector2d } from 'konva/lib/types';
 import { UseAddHover } from '../lib/hooks/use-add-hover';
 import useImage from 'use-image';
+import { getColor } from '../../app/config/theme';
 
 interface IImageConfig {
 	offset: Vector2d;
@@ -141,7 +142,7 @@ export const UserAvatar = memo(
 						x={0}
 						y={0}
 						radius={AVATAR.radius}
-						stroke={COLORS.avatar.border.normal}
+						stroke={getColor('mutedFg')}
 						strokeWidth={AVATAR.border.width}
 						fillPatternImage={imageObj}
 						fillPatternOffset={imageConfig.offset}
@@ -166,7 +167,7 @@ export const UserAvatar = memo(
 				<Text
 					text={String(userIndex + 1)}
 					listening={false}
-					fill={COLORS.text.ghost}
+					fill={getColor('mutedFg')}
 					fontSize={KONVA.font.size}
 					x={
 						(userIndex % 2 === 0 ? -1 : 1) * AVATAR.radius * 1.5 -

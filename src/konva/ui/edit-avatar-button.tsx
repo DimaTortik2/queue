@@ -1,8 +1,8 @@
 import { Group, Path, Rect } from 'react-konva';
-import { COLORS } from '../../app/config/consts';
 import { useRef } from 'react';
 import type Konva from 'konva';
 import { UseAddHover } from '../lib/hooks/use-add-hover';
+import { getColor } from '../../app/config/theme';
 
 const ORIGINAL_SIZE = 38;
 
@@ -11,8 +11,8 @@ export function EditAvatarButton({
 	h = ORIGINAL_SIZE,
 	x = 0,
 	y = 0,
-	color = COLORS.icon.passive,
-	colorHover = COLORS.icon.active,
+	color = getColor('mutedFg'),
+	colorHover = getColor('fg'),
 	onClick,
 }: {
 	w?: number;

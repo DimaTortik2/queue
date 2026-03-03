@@ -7,7 +7,7 @@ import {
 
 export function useLocalRenamingModal() {
 	const [isLocalRenamingModalVisible, setIsLocalRenamingModalVisible] = useAtom(
-		isLocalRenamingModalVisibleAtom
+		isLocalRenamingModalVisibleAtom,
 	);
 	const selectedUser = useAtomValue(selectedUserAtom);
 	const currentUser = useAtomValue(currentUserAtom);
@@ -20,6 +20,7 @@ export function useLocalRenamingModal() {
 
 	return {
 		isLocalRenamingModalVisible,
+		setIsLocalRenamingModalVisible,
 		selectedUser,
 		currentUser,
 		handleClose,
